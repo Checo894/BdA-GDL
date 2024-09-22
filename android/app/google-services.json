@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "541243246193",
+    "project_id": "bamx-97ab1",
+    "storage_bucket": "bamx-97ab1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541243246193:android:1ba5024b66b3ab89f53dd0",
+        "android_client_info": {
+          "package_name": "bamx.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtPIGo4Br66XIqYMDKYADdgJeQGbi4wQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
