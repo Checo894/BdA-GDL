@@ -12,13 +12,28 @@ function App({navigation} : any) {
   return (
     <View style={styles.container}>
       <View style={styles.firstContainer}>
-        {/* <Image 
-            source={require('./assets/logo.png')} 
+        <Image 
+            source={require('./assets/redbamx_logo_sinfondo.png')} 
             // style={styles.image}
-        /> */}
-        <Text>
-          Welcome to the app
+        />
+      </View>
+      <View style={styles.secondContainer}>
+        <Text style={styles.title}>
+          ¡Únete a la lucha contra el hambre!
         </Text>
+        <Text style={styles.text}>
+          Cada donación marca la diferencia.
+          Ayuda a llevar alimentos a quienes
+          más lo necesitan y sé parte del
+          cambio. ¡Comienza hoy mismo!
+        </Text>
+        <View style={styles.button}>
+          <Button
+            title="Empieza Aquí"
+            onPress={() => navigation.navigate('Registrate')}
+            color={'#f31f35'}
+          />
+        </View>
       </View>
     </View>
   );
@@ -31,17 +46,17 @@ export default function Navigation() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen 
-          name="start"
+          name="INTRODUCCION"
           component={App}
         /> 
-        {/* <Stack.Screen 
+        <Stack.Screen 
           name="Registrate"
           component={Register}
-        /> */}
+        />
       </Stack.Navigator>
-      <View style={styles.footer}>
+      {/* <View style={styles.footer}>
         <Text style={styles.footerText}>some footer text</Text>
-      </View>
+      </View> */}
     </NavigationContainer>
   );
 }
@@ -50,20 +65,23 @@ export default function Navigation() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
-    padding: 10,
+    backgroundColor: '#0fa917',
+    // padding: 10,
     // alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  buttonContainer: {
-    color: '#FF6347',
-    marginTop: 10,
-    marginLeft: 20,
-    marginRight: 20,
+    // justifyContent: 'space-around',
   },
   firstContainer: {
     flex: 1,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#0fa917',
+  },
+  secondContainer: {
+    flex: 1,
+    justifyContent: 'space-around',
+    backgroundColor: '#ffffff',
+    padding: 25,
+    borderRadius: 30,
   },
   footer: {
     justifyContent: 'flex-end',
@@ -72,16 +90,19 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 10,
   },
-  titleContainer: {
-    margin: 50,
-    alignItems: 'center',
-  },
   title: {
     fontSize: 30,
+    textAlign: 'center',
     fontWeight: 'bold',
   },
   text: {
-    fontSize: 20,
-    padding: 10,
+    fontSize: 18,
+    textAlign: 'center',
+    fontWeight: 'light',
+  },
+  button: {
+    width: 150,
+    margin: 10,
+    alignSelf: 'center',
   },
 });
