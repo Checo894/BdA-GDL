@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Button, StyleSheet, View, Text, FlatList, TouchableOpacity, Image, StatusBar, ActivityIndicator, TextInput } from 'react-native';
 
-export default function Register({navigation} : any) {
+export default function Login({navigation} : any) {
     const [userName, setUserName] = useState('');
     const [userPassword, setUserPassword] = useState('');
 
@@ -12,7 +12,7 @@ export default function Register({navigation} : any) {
             <View style={styles.first}></View>
             <View style={styles.second}>
                 <View style={styles.inSecond}>
-                    <Text style={styles.title}>Registro</Text>
+                    <Text style={styles.title}>Inicio de Sesión</Text>
                     <View>
                         <Text style={styles.text}>Usuario</Text>
                         <TextInput
@@ -31,11 +31,10 @@ export default function Register({navigation} : any) {
                             onChangeText={setUserPassword}
                         />
                     </View>
-                    <Text style={styles.textCenter} onPress={() => navigation.navigate('Login')}>¿Ya tienes cuenta?</Text> 
                     <View style={styles.button}>
                         <View style={{ borderRadius: 30, overflow: 'hidden' }}>
                             <Button
-                            title="Regístrate"
+                            title="Ingresa"
                             onPress={() => navigation.navigate('Home')}
                             color={'#f31f35'}
                             />
