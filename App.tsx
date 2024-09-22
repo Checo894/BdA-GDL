@@ -1,9 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import TheCharacters from './classes/Characters';
-import TheCars from './classes/Cars';
+import Register from './classes/Register';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,32 +12,13 @@ function App({navigation} : any) {
   return (
     <View style={styles.container}>
       <View style={styles.firstContainer}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>HELLO!</Text>
-          <Text style={styles.text}>And welcome to my app</Text>
-        </View>
-        <View>
-          <Text style={styles.text}>Choose a category:</Text>
-          <StatusBar style="auto" />
-        </View>
-        <View>
-          <View style={styles.buttonContainer}>
-            <Button 
-              title="The Characters"
-              onPress={() => {
-                navigation.navigate("The Characters");
-              }}
-            />
-          </View>
-          <View style={styles.buttonContainer}>
-            <Button
-              title="The Cars"
-              onPress={() => {
-                navigation.navigate("The Cars");
-              }}
-            />
-          </View>
-        </View>
+        {/* <Image 
+            source={require('./assets/logo.png')} 
+            // style={styles.image}
+        /> */}
+        <Text>
+          Welcome to the app
+        </Text>
       </View>
     </View>
   );
@@ -51,20 +31,16 @@ export default function Navigation() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen 
-          name="Main"
+          name="start"
           component={App}
         /> 
-        <Stack.Screen 
-          name="The Characters"
-          component={TheCharacters}
-        />
-        <Stack.Screen 
-          name="The Cars"
-          component={TheCars}
-        />
+        {/* <Stack.Screen 
+          name="Registrate"
+          component={Register}
+        /> */}
       </Stack.Navigator>
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Made by: Sergio E. Gutiérrez T.</Text>
+        <Text style={styles.footerText}>some footer text</Text>
       </View>
     </NavigationContainer>
   );
