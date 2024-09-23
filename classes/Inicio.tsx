@@ -7,8 +7,8 @@ export default function Inicio({navigation} : any) {
     <View style={styles.container}>
       <View style={styles.firstContainer}>
         <Image 
-            source={require('../assets/redbamx_logo_sinfondo.png')} 
-            // style={styles.image}
+            source={require('../assets/logosinfondo.png')} 
+            style={styles.image}
         />
       </View>
       <View style={styles.secondContainer}>
@@ -80,5 +80,9 @@ const styles = StyleSheet.create({
     margin: 10,
     alignSelf: 'flex-end',
     borderRadius: 30,
+  },
+  image: {
+    width: 350,
+    height: 350,
   },
 });

@@ -5,6 +5,11 @@ import Inicio from './classes/Inicio';
 import Register from './classes/Register';
 import Login from './classes/Login';
 import Home from './classes/Home';
+import ProductsLayout from './classes/ProductLayout';
+import ProductCard from './classes/ProductCard';
+import Cart from './classes/Cart';
+import Profile from './classes/Profile';
+import Rewards from './classes/Rewards';
 // Import Firebase SDK
 import { initializeApp } from 'firebase/app';
 import Constants from 'expo-constants';
@@ -40,6 +45,11 @@ export default function App() {
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="ProductsLayout" component={ProductsLayout} />
+        <Stack.Screen name="ProductCard" component={ProductCard} />
+        <Stack.Screen name="Cart" component={Cart} />
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="Rewards" component={Rewards} />
       </Stack.Navigator>
     </NavigationContainer>
   );
