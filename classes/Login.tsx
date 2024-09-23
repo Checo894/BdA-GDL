@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, StyleSheet, View, Text, TextInput, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 // Importamos las funciones necesarias de Firebase
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 
 export default function Login() {
   const [userName, setUserName] = useState('');
   const [userPassword, setUserPassword] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);  // Estado para saber si la sesión está iniciada
   const navigation = useNavigation();
+  const auth = getAuth();
+
+  // Verificar si el usuario está autenticado
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   // Función para iniciar sesión
   const handleLogin = async () => {
@@ -26,6 +41,11 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
+      {isLoggedIn && (
+        <View style={styles.sessionInfo}>
+          <Text style={styles.sessionText}>Sesión iniciada</Text>
+        </View>
+      )}
       <View style={styles.first}></View>
       <View style={styles.second}>
         <View style={styles.inSecond}>
@@ -67,6 +87,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     height: '100%',
     width: '100%',
+  },
+  sessionInfo: {
+    padding: 15,
+    backgroundColor: '#EDEEEF',
+    borderRadius: 10,
+    alignItems: 'center',
+    margin: 10,
+  },
+  sessionText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#0fa917',
+    marginBottom: 10,
   },
   first: {
     backgroundColor: '#0fa917',

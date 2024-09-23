@@ -1,12 +1,44 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { Button, StyleSheet, View, Text, FlatList, TouchableOpacity, Image, StatusBar, ActivityIndicator, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Button, StyleSheet, View, Text, Image, TextInput } from 'react-native';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
 export default function Home({navigation} : any) {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const auth = getAuth();
 
+    // Verificar si el usuario está autenticado
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+        });
+
+        // Cleanup suscripción cuando el componente se desmonte
+        return () => unsubscribe();
+    }, [auth]);
+
+    // Función para cerrar sesión
+    const handleSignOut = () => {
+        signOut(auth)
+        .then(() => {
+            navigation.navigate('Inicio'); // Navegar a la pantalla de inicio o login
+        })
+        .catch((error) => {
+            console.error('Error al cerrar sesión:', error);
+        });
+    };
 
     return (
         <View style={styles.container}>
+            {isLoggedIn && (
+                <View style={styles.sessionInfo}>
+                <Text style={styles.sessionText}>Sesión iniciada</Text>
+                <Button title="Cerrar sesión" onPress={handleSignOut} color={'#f31f35'} />
+                </View>
+            )}
             <View style={styles.search}>
                 <View style={styles.iconContainer1}>
                     <Image 
@@ -126,6 +158,19 @@ const styles = StyleSheet.create({
         width: '100%',
         alignContent: 'space-between',
         justifyContent: 'space-between',
+    },
+    sessionInfo: {
+        padding: 15,
+        backgroundColor: '#EDEEEF',
+        borderRadius: 10,
+        alignItems: 'center',
+        margin: 10,
+    },
+        sessionText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#0fa917',
+        marginBottom: 10,
     },
     search: {
         // flex: 1,
