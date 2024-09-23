@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button, StyleSheet, View, Text, Image, TextInput } from 'react-native';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Home({navigation} : any) {
+export default function Home() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const auth = getAuth();
+    const navigation = useNavigation();
 
     // Verificar si el usuario está autenticado
     useEffect(() => {

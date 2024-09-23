@@ -23,6 +23,10 @@ const firebaseConfig = {
 // Inicializa Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
+if (!firebaseApp) {
+  console.error('Firebase app initialization failed.');
+}
+
 const auth = initializeAuth(firebaseApp, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
