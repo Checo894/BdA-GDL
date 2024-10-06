@@ -10,8 +10,11 @@ import ProductCard from './classes/ProductCard';
 import Cart from './classes/Cart';
 import Profile from './classes/Profile';
 import Rewards from './classes/Rewards';
+
 // Import Firebase SDK
 import { initializeApp } from 'firebase/app';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
 const firebaseConfig = {
@@ -23,17 +26,16 @@ const firebaseConfig = {
   appId: Constants.expoConfig?.extra?.MOBILDESK_APP_ID,
 };
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyCtPIGo4Br66XIqYMDKYADdgJeQGbi4wQ4",
-//   authDomain: "TU_AUTH_DOMAIN",
-//   projectId: "bamx-97ab1",
-//   storageBucket: "bamx-97ab1.appspot.com",
-//   messagingSenderId: "541243246193",
-//   appId: "1:541243246193:android:1ba5024b66b3ab89f53dd0",
-// };
-
 // Inicializa Firebase
-initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
+
+if (!firebaseApp) {
+  console.error('Firebase app initialization failed.');
+}
+
+const auth = initializeAuth(firebaseApp, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+});
 
 const Stack = createStackNavigator();
 

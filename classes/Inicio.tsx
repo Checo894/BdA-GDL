@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, Button, Image } from 'react-native';
 
-export default function Inicio({navigation} : any) {
+export default function Inicio() {
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
