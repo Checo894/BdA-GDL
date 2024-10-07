@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import Inicio from '../classes/Inicio';
+import Inicio from '../../screens/Inicio';
 import { NavigationContainer } from '@react-navigation/native';
 
 // Renombramos navigateMock a mockNavigate

@@ -1,15 +1,19 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../constants/RootStackParamList';
 import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
+type InicioNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Register'>;
 
 export default function Inicio() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<InicioNavigationProp>();
 
   return (
     <View style={styles.container}>
       <View style={styles.firstContainer}>
-        <Image 
-            source={require('../assets/logosinfondo.png')} 
+        <Image
+            source={require('../assets/images/logosinfondo.png')}
             style={styles.image}
         />
       </View>
