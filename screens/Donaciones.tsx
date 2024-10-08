@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function ProductsLayout({ navigation }: any) {
+export default function Donaciones({ navigation }: any) {
   const products = Array.from({ length: 6 }).map((_, index) => ({
     id: index + 1,
     title: 'Producto',

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,28 +10,32 @@ import {
 import { Product } from "../model/ProductModel";
 import { getFeaturedProducts } from "../api/product/featured.product.service";
 import Icon from "react-native-vector-icons/Ionicons";
+// @ts-ignore - Implicit any typescript error ignore
+import { db } from "../api/firebase.service";
 
 export default function Home({ navigation }: any) {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      try{
-        const productsData = await getFeaturedProducts();
-        setFeaturedProducts(productsData);
-        console.log(productsData);
+      let data;
+      try {
+        data = await getFeaturedProducts();
+        setProducts(data);
+        console.log(data);
       } catch (error) {
         console.error(error);
       } finally {
         setLoading(false);
       }
-    }
+    };
     fetchProducts();
-  }, []);
+    // @ts-ignore - Implicit any typescript error ignore
+  }, [db])
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return <ActivityIndicator size="large" color="#0000ff" style={styles.activityIndicator} />;
   }
 
   return (
@@ -69,17 +73,21 @@ export default function Home({ navigation }: any) {
         <View style={styles.products}>
           <Text style={styles.title}>Productos</Text>
           <View style={styles.productsGrid}>
-            {Array.from({ length: 4 }).map((_, index) => (
-                <View key={index} style={styles.productCard}>
-                  <Text>Producto</Text>
-                  <Text>$99.99</Text>
-                </View>
-            ))}
+            {products.length > 0 ? (
+                products.map((product) => (
+                    <View key={product.id} style={styles.productCard}>
+                      <Text>{product.name}</Text>
+                      <Text>${product.price}</Text>
+                    </View>
+                ))
+            ) : (
+                <Text>No hay productos disponibles por el momento.</Text>
+            )}
           </View>
         </View>
 
         <View style={styles.tabBar}>
-          <TouchableOpacity onPress={() => navigation.navigate("ProductsLayout")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Donaciones")}>
             <Icon name="grid-outline" size={30} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("Rewards")}>
@@ -188,4 +196,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 50,
   },
+  activityIndicator: {
+    marginTop: 100,
+  }
 });

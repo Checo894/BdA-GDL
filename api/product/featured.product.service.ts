@@ -1,20 +1,23 @@
 import { collection, getDocs, limit, query, where } from "firebase/firestore";
-import { db } from "../firebase.service";
 import { Product } from "../../model/ProductModel";
+// @ts-ignore - Implicit any typescript error ignore
+import { db } from "../firebase.service";
 
 export const getFeaturedProducts = async (): Promise<Product[]> => {
+    // @ts-ignore - Implicit any typescript error ignore
     if (!db) {
         throw new Error("Firestore has not been initialized.");
     }
 
-    const q = query(
+    const query1 = query(
         collection(db, 'Product'),
-        // where('is_featured', '==', true),
+        where('is_featured', '==', true),
+        where('is_active', '==', true),
         limit(6)
     );
 
     try {
-        const snapshot = await getDocs(q);
+        const snapshot = await getDocs(query1);
         console.log(snapshot.size);
         if (snapshot.empty) {
             console.warn('No matching documents found.');

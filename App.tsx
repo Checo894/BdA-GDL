@@ -9,7 +9,7 @@ import Inicio from './screens/Inicio';
 import Register from './screens/Register';
 import Login from './screens/Login';
 import Home from './screens/Home';
-import ProductsLayout from './screens/ProductLayout';
+import Donaciones from "./screens/Donaciones";
 import ProductCard from './screens/ProductCard';
 import Cart from './screens/Cart';
 import Profile from './screens/Profile';
@@ -42,8 +42,8 @@ export default function App() {
         <Stack.Screen name="Inicio" component={Inicio} options={{ headerShown: false }} />
         <Stack.Screen name="Home" component={Home}  options={{ headerShown: false }} />
         <Stack.Screen name="Register" component={Register}  options={{ headerShown: false }} />
-        <Stack.Screen name="Login" component={Login}  options={{ headerShown: false }} />
-        <Stack.Screen name="ProductsLayout" component={ProductsLayout} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Donaciones" component={Donaciones} />
         <Stack.Screen name="ProductCard" component={ProductCard} />
         <Stack.Screen name="Cart" component={Cart} />
         <Stack.Screen name="Profile" component={Profile} />

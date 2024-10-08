@@ -3,7 +3,7 @@ export type RootStackParamList = {
     Home: undefined;
     Register: undefined;
     Login: undefined;
-    ProductsLayout: undefined;
+    Donaciones: undefined;
     ProductCard: undefined;
     Cart: undefined;
     Profile: undefined;

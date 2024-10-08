@@ -1,42 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { Button, StyleSheet, View, Text, TextInput, Alert } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../constants/RootStackParamList';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged
-} from 'firebase/auth';
+import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+// @ts-ignore - Implicit any typescript error ignore
+import { auth } from "../api/firebase.service";
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-// TODO: Cuadro de registro es muy largo y falta agregar margen
 export default function Login() {
   const [userName, setUserName] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigation = useNavigation<LoginScreenNavigationProp>();
-  const auth = getAuth();
 
   useEffect(() => {
+    // @ts-ignore - Implicit any typescript error ignore
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
+      setIsLoggedIn(!!user);
     });
 
     return () => unsubscribe();
-  }, [auth]);
+  }, []);
 
   const handleLogin = async () => {
-    const auth = getAuth();
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, userName, userPassword);
-      const user = userCredential.user; // FIXME: Unused variable
+      // @ts-ignore - Implicit any typescript error ignore
+      await signInWithEmailAndPassword(auth, userName, userPassword);
       Alert.alert('Inicio de sesión exitoso', '¡Bienvenido de nuevo!');
       navigation.navigate('Home');
     } catch (error: any) {
@@ -44,109 +36,115 @@ export default function Login() {
     }
   };
 
-  // TODO: Logged In confirmation pop up
   return (
-    <View style={styles.container}>
-      <View style={styles.first}></View>
-      <View style={styles.second}>
-        <View style={styles.inSecond}>
-          <Text style={styles.title}>Inicio de Sesión</Text>
-          <View>
-            <Text style={styles.text}>Usuario</Text>
+      <View style={styles.container}>
+        <View style={styles.first}></View>
+        <View style={styles.second}>
+          <View style={styles.inSecond}>
+            <Text style={styles.title}>Inicio de Sesión</Text>
             <TextInput
-              style={styles.input}
-              placeholder="Correo electrónico"
-              value={userName}
-              onChangeText={setUserName}
+                style={styles.input}
+                placeholder="Correo electrónico"
+                value={userName}
+                onChangeText={setUserName}
             />
-          </View>
-          <View>
-            <Text style={styles.text}>Contraseña</Text>
             <TextInput
-              style={styles.input}
-              placeholder="Contraseña"
-              secureTextEntry
-              value={userPassword}
-              onChangeText={setUserPassword}
+                style={styles.input}
+                placeholder="Contraseña"
+                secureTextEntry
+                value={userPassword}
+                onChangeText={setUserPassword}
             />
-          </View>
-          <View style={styles.button}>
-            <View style={{ borderRadius: 30, overflow: 'hidden' }}>
-              <Button title="Ingresa" onPress={handleLogin} color={'#f31f35'} />
+            <TouchableOpacity
+                style={styles.redButton}
+                onPress={handleLogin}
+            >
+              <Text style={styles.buttonText}>Ingresa</Text>
+            </TouchableOpacity>
+            <View style={styles.inlineTextContainer}>
+              <Text style={styles.textBold}>¿No tienes cuenta? </Text>
+              <Text style={styles.textGreen} onPress={() => navigation.navigate('Register')}>
+                Regístrate
+              </Text>
             </View>
           </View>
         </View>
       </View>
-      <View style={styles.third}></View>
-    </View>
   );
 }
 
-// Styles
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: '#ffffff',
-    height: '100%',
-    width: '100%',
-  },
-  sessionInfo: {
-    padding: 15,
-    backgroundColor: '#EDEEEF',
-    borderRadius: 10,
-    alignItems: 'center',
-    margin: 10,
-  },
-  sessionText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#0fa917',
-    marginBottom: 10,
   },
   first: {
     backgroundColor: '#0fa917',
-    padding: 45,
+    padding: 20,
   },
   second: {
-    flex: 5,
+    flex: 4,
     backgroundColor: '#0fa917',
-    paddingTop: 45,
-    paddingBottom: 45,
+    paddingVertical: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   inSecond: {
-    flex: 1,
     backgroundColor: '#ffffff',
-    padding: 25,
-    paddingHorizontal: 65,
+    paddingHorizontal: 40,
+    paddingVertical: 30,
+    marginHorizontal: 20,
     borderRadius: 30,
-    justifyContent: 'space-around',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    width: '90%',
+    minHeight: 350,
   },
   title: {
-    fontSize: 30,
+    fontSize: 28,
     textAlign: 'center',
     fontWeight: 'bold',
+    marginBottom: 20,
   },
-  text: {
-    fontSize: 18,
-    textAlign: 'left',
-    fontWeight: '200',
+  inlineTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  textBold: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  textGreen: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#0fa917',
+    textDecorationLine: 'underline',
   },
   input: {
     height: 40,
     borderColor: '#878380',
     borderWidth: 1,
-    marginBottom: 10,
+    marginBottom: 15,
     paddingHorizontal: 10,
     borderRadius: 10,
     backgroundColor: '#EDEEEF',
+    width: '100%',
   },
-  button: {
-    width: 150,
-    margin: 10,
-    alignSelf: 'center',
+  redButton: {
+    backgroundColor: '#f31f35',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 30,
+    height: 50,
+    marginBottom: 15,
+    alignSelf: 'center',
+    width: '100%',
   },
-  third: {
-    backgroundColor: '#0fa917',
-    padding: 45,
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
