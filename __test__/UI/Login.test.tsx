@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react-native';
-import Login from '../classes/Login';
+import Login from '../../screens/Login';
 import { Alert } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { NavigationContainer } from '@react-navigation/native';

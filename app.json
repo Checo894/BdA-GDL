@@ -11,13 +11,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "extra": {
-      "FIREBASE_API_KEY": "AIzaSyCtPIGo4Br66XIqYMDKYADdgJeQGbi4wQ4",
-      "PROJECT_ID": "bamx-97ab1",
-      "STORAGE_BUCKET": "bamx-97ab1.appspot.com",
-      "MESSAGING_SENDER_ID": "541243246193",
-      "MOBILDESK_APP_ID": "1:541243246193:android:1ba5024b66b3ab89f53dd0"
-    },
     "ios": {
       "supportsTablet": true
     },

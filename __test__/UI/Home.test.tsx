@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, act, waitFor } from '@testing-library/react-native';
-import Home from '../classes/Home';
+import Home from '../../screens/Home';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { NavigationContainer } from '@react-navigation/native';
 
