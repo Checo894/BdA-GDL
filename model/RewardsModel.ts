@@ -8,4 +8,5 @@ export interface Rewards {
     image_url: string;
     is_active: boolean;
     points_cost: number;
+    is_featured: boolean;
 }

@@ -12,8 +12,10 @@ import {
 } from "react-native";
 import { Product } from "../model/ProductModel";
 import { User } from "../model/UserModel";
+import { Rewards } from "../model/RewardsModel";
 import { getFeaturedProducts } from "../api/product/featured.product.service";
 import { getUser } from "../api/user/user.service";
+import { getFeaturedRewards } from "../api/rewards/featured.rewards.service";
 import Icon from "react-native-vector-icons/Ionicons";
 
 const screenWidth = Dimensions.get("window").width;
@@ -21,18 +23,22 @@ const screenWidth = Dimensions.get("window").width;
 export default function Home({ navigation }: any) {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState<Product[]>([]);
-  const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [userData, setUserData] = useState<User[]>([]);
+  const [rewards, setRewards] = useState<Rewards[]>([]);
+  const [currentRewardsIndex, setCurrentRewardsIndex] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       let products;
       let user;
+      let rewards;
       try {
         products = await getFeaturedProducts();
         user = await getUser();
+        rewards = await getFeaturedRewards();
         setProducts(products);
         setUserData(user);
+        setRewards(rewards);
       } catch (error) {
         console.error(error);
       } finally {
@@ -43,13 +49,13 @@ export default function Home({ navigation }: any) {
   }, []);
 
   const handleNextProduct = () => {
-    setCurrentProductIndex((prevIndex) =>
+    setCurrentRewardsIndex((prevIndex) =>
         prevIndex === products.length - 1 ? 0 : prevIndex + 1
     );
   };
 
   const handlePreviousProduct = () => {
-    setCurrentProductIndex((prevIndex) =>
+    setCurrentRewardsIndex((prevIndex) =>
         prevIndex === 0 ? products.length - 1 : prevIndex - 1
     );
   };
@@ -110,7 +116,7 @@ export default function Home({ navigation }: any) {
                   color="#0000ff"
                   style={styles.activityIndicator}
               />
-          ) : products.length === 0 ? (
+          ) : rewards.length === 0 ? (
               <View>
                 <Text>No hay productos recomendados disponibles.</Text>
               </View>
@@ -123,12 +129,12 @@ export default function Home({ navigation }: any) {
                   <Icon name="chevron-back-outline" size={30} color="#fff" />
                 </TouchableOpacity>
                 <Image
-                    source={{ uri: products[currentProductIndex].image_url }}
+                    source={{ uri: rewards[currentRewardsIndex].image_url }}
                     style={styles.fullWidthImage}
                 />
                 <View style={styles.overlay}>
                   <Text style={styles.overlayText}>
-                    {products[currentProductIndex].name}
+                    {rewards[currentRewardsIndex].name}
                   </Text>
                 </View>
                 <TouchableOpacity
