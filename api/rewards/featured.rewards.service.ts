@@ -1,24 +1,24 @@
-import { collection, getDocs, limit, query, where } from "firebase/firestore";
-import { Product } from "../../model/ProductModel";
+import { Rewards } from "../../model/RewardsModel";
+import {collection, getDocs, limit, query, where} from "firebase/firestore";
 
-// @ts-ignore - Implicit any typescript error ignore
+// @ts-ignore
 import { db } from "../firebase.service";
 
-export const getFeaturedProducts = async (): Promise<Product[]> => {
-    // @ts-ignore - Implicit any typescript error ignore
+export const getFeaturedRewards = async (): Promise<Rewards[]> => {
+    // @ts-ignore
     if (!db) {
         throw new Error("Firestore has not been initialized.");
     }
 
-    const query1 = query(
-        collection(db, 'Product'),
+    const q = query(
+        collection(db, 'Rewards'),
         where('is_featured', '==', true),
         where('is_active', '==', true),
-        limit(6)
+        limit(4)
     );
 
     try {
-        const snapshot = await getDocs(query1);
+        const snapshot = await getDocs(q);
         if (snapshot.empty) {
             console.warn('No matching documents found.');
             return [];
@@ -26,22 +26,20 @@ export const getFeaturedProducts = async (): Promise<Product[]> => {
         return snapshot.docs.map((doc) => {
             const data = doc.data();
 
-            const product: Product = {
+            const reward: Rewards = {
                 id: doc.id,
+                name: data.name,
                 created_at: data.created_at,
                 description: data.description,
                 image_url: data.image_url,
                 is_active: data.is_active,
-                name: data.name,
-                price: data.price,
-                stock_quantity: data.stock_quantity,
-                updated_at: data.updated_at,
+                points_cost: data.points_cost,
                 is_featured: data.is_featured,
             };
-            return product;
+            return reward;
         });
     } catch (error) {
-        console.error("Error fetching featured products:", error);
+        console.error("Error fetching featured rewards:", error);
         throw error;
     }
-};
+}
