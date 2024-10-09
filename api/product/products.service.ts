@@ -4,7 +4,7 @@ import { Product } from "../../model/ProductModel";
 // @ts-ignore - Implicit any typescript error ignore
 import { db } from "../firebase.service";
 
-export const getFeaturedProducts = async (): Promise<Product[]> => {
+export const getProducts = async (): Promise<Product[]> => {
     // @ts-ignore - Implicit any typescript error ignore
     if (!db) {
         throw new Error("Firestore has not been initialized.");
@@ -12,7 +12,6 @@ export const getFeaturedProducts = async (): Promise<Product[]> => {
 
     const query1 = query(
         collection(db, 'Product'),
-        where('is_featured', '==', true),
         where('is_active', '==', true),
         limit(6)
     );
@@ -45,3 +44,5 @@ export const getFeaturedProducts = async (): Promise<Product[]> => {
         throw error;
     }
 };
+
+
