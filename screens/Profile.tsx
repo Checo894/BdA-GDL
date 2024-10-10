@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons'; 
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function ProfileScreen({ navigation }: any) {
   return (
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   logoutButton: {
-    marginTop: 'auto', 
+    marginTop: 'auto',
     alignItems: 'center',
     marginBottom: 80,
   },
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: 28,
   },
   homeIconContainer: {
     backgroundColor: '#f31f35',

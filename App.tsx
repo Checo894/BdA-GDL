@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { RootStackParamList } from './constants/RootStackParamList';
 import { ActivityIndicator } from "react-native";
 import { initializeFirebase } from "./api/firebase.service";
+import { CartProvider } from "./context/CartContex";
 
 import Inicio from './screens/Inicio';
 import Register from './screens/Register';
@@ -37,19 +38,21 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Inicio">
-        <Stack.Screen name="Inicio" component={Inicio} options={{ headerShown: false }} />
-        <Stack.Screen name="Home" component={Home}  options={{ headerShown: false }} />
-        <Stack.Screen name="Register" component={Register}  options={{ headerShown: false }} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Donaciones" component={Donaciones} />
-        <Stack.Screen name="ProductCard" component={ProductCard} />
-        <Stack.Screen name="Cart" component={Cart} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Rewards" component={Rewards} />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <CartProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Inicio">
+            <Stack.Screen name="Inicio" component={Inicio} options={{ headerShown: false }} />
+            <Stack.Screen name="Home" component={Home}  options={{ headerShown: false }} />
+            <Stack.Screen name="Register" component={Register}  options={{ headerShown: false }} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Donaciones" component={Donaciones} />
+            <Stack.Screen name="ProductCard" component={ProductCard} />
+            <Stack.Screen name="Cart" component={Cart} />
+            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="Rewards" component={Rewards} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </CartProvider>
   );
 }
 
