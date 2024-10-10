@@ -5,10 +5,9 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator,
   Image,
   Dimensions,
-  ScrollView,
+  ScrollView, ActivityIndicator,
 } from "react-native";
 import { Product } from "../model/ProductModel";
 import { User } from "../model/UserModel";
@@ -29,13 +28,10 @@ export default function Home({ navigation }: any) {
 
   useEffect(() => {
     const fetchData = async () => {
-      let products;
-      let user;
-      let rewards;
       try {
-        products = await getFeaturedProducts();
-        user = await getUser();
-        rewards = await getFeaturedRewards();
+        const products = await getFeaturedProducts();
+        const user = await getUser();
+        const rewards = await getFeaturedRewards();
         setProducts(products);
         setUserData(user);
         setRewards(rewards);
@@ -49,16 +45,29 @@ export default function Home({ navigation }: any) {
   }, []);
 
   const handleNextProduct = () => {
-    setCurrentRewardsIndex((prevIndex) =>
-        prevIndex === products.length - 1 ? 0 : prevIndex + 1
-    );
+    if (rewards.length > 0) {
+      setCurrentRewardsIndex((prevIndex) =>
+          prevIndex === rewards.length - 1 ? 0 : prevIndex + 1
+      );
+    }
   };
 
   const handlePreviousProduct = () => {
-    setCurrentRewardsIndex((prevIndex) =>
-        prevIndex === 0 ? products.length - 1 : prevIndex - 1
-    );
+    if (rewards.length > 0) {
+      setCurrentRewardsIndex((prevIndex) =>
+          prevIndex === 0 ? rewards.length - 1 : prevIndex - 1
+      );
+    }
   };
+
+  if (loading) {
+    return (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text>Cargando...</Text>
+        </View>
+    );
+  }
 
   return (
       <View style={styles.container}>
@@ -107,20 +116,7 @@ export default function Home({ navigation }: any) {
 
         {/* Recommended Section */}
         <View style={styles.recommended}>
-          <View style={styles.recommendedTop}>
-            <Text style={styles.title}>Recomendado</Text>
-          </View>
-          {loading ? (
-              <ActivityIndicator
-                  size="large"
-                  color="#0000ff"
-                  style={styles.activityIndicator}
-              />
-          ) : rewards.length === 0 ? (
-              <View>
-                <Text>No hay productos recomendados disponibles.</Text>
-              </View>
-          ) : (
+          {rewards.length > 0 ? (
               <View style={styles.carouselWrapper}>
                 <TouchableOpacity
                     style={[styles.chevronContainer, styles.leftChevron]}
@@ -128,15 +124,23 @@ export default function Home({ navigation }: any) {
                 >
                   <Icon name="chevron-back-outline" size={30} color="#fff" />
                 </TouchableOpacity>
-                <Image
-                    source={{ uri: rewards[currentRewardsIndex].image_url }}
-                    style={styles.fullWidthImage}
-                />
-                <View style={styles.overlay}>
-                  <Text style={styles.overlayText}>
-                    {rewards[currentRewardsIndex].name}
-                  </Text>
-                </View>
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.navigate("ProductCard", {
+                          item: rewards[currentRewardsIndex],
+                        })
+                    }
+                >
+                  <Image
+                      source={{ uri: rewards[currentRewardsIndex]?.image_url }}
+                      style={styles.fullWidthImage}
+                  />
+                  <View style={styles.overlay}>
+                    <Text style={styles.overlayText}>
+                      {rewards[currentRewardsIndex]?.name}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.chevronContainer, styles.rightChevron]}
                     onPress={handleNextProduct}
@@ -144,6 +148,8 @@ export default function Home({ navigation }: any) {
                   <Icon name="chevron-forward-outline" size={30} color="#fff" />
                 </TouchableOpacity>
               </View>
+          ) : (
+              <Text>No hay recompensas disponibles en este momento.</Text>
           )}
         </View>
 
@@ -153,7 +159,13 @@ export default function Home({ navigation }: any) {
           <View style={styles.productsGrid}>
             {products.length > 0 ? (
                 products.map((product) => (
-                    <View key={product.id} style={styles.productCard}>
+                    <TouchableOpacity
+                        key={product.id}
+                        style={styles.productCard}
+                        onPress={() =>
+                            navigation.navigate("ProductCard", { item: product })
+                        }
+                    >
                       <Image
                           source={{ uri: product.image_url }}
                           style={styles.productImage}
@@ -161,7 +173,7 @@ export default function Home({ navigation }: any) {
                       <View style={styles.productOverlay}>
                         <Text style={styles.productOverlayText}>{product.name}</Text>
                       </View>
-                    </View>
+                    </TouchableOpacity>
                 ))
             ) : (
                 <Text>No hay productos disponibles por el momento.</Text>
@@ -221,18 +233,13 @@ const styles = StyleSheet.create({
   },
   recommended: {
     paddingHorizontal: 20,
-    marginBottom: 0,
-  },
-  recommendedTop: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
     marginBottom: 10,
   },
   carouselWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    marginHorizontal: 15,
     position: "relative",
   },
   chevronContainer: {
@@ -244,13 +251,13 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   leftChevron: {
-    left: 10,
+    left: 0,
   },
   rightChevron: {
-    right: 10,
+    right: 0,
   },
   fullWidthImage: {
-    width: screenWidth - 40,
+    width: screenWidth - 50,
     height: 200,
     resizeMode: "cover",
     borderRadius: 10,
@@ -356,5 +363,12 @@ const styles = StyleSheet.create({
   pointsText: {
     fontSize: 16,
     marginTop: 8,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 20,
   },
 });
