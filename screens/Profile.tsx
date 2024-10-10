@@ -6,6 +6,12 @@ export default function ProfileScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
       <View style={styles.section}>
+        <Icon
+            name="arrow-back-outline"
+            size={24}
+            onPress={() => navigation.goBack()}
+            style={styles.backIcon}
+        />
         <Text style={styles.sectionTitle}>Cuenta</Text>
 
         <TouchableOpacity style={styles.option} onPress={() => {}}>
@@ -124,5 +130,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f31f35',
     padding: 10,
     borderRadius: 50,
+  },
+  backIcon: {
+    marginBottom: 20,
   },
 });

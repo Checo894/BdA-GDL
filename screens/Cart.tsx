@@ -1,5 +1,8 @@
+// TODO: Check if amount of products in cart is not greater than the stock quantity of the product
+//  -This may be better to implement in the ProductCard screen
+
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { CartItem, useCart } from '../context/CartContex';
 
@@ -9,6 +12,7 @@ export default function CartScreen({ navigation }: any) {
   const { cartItems, removeFromCart } = useCart();
 
   const [itemsWithIds, setItemsWithIds] = useState<CartItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const assignCartItemIds = () => {
@@ -19,10 +23,19 @@ export default function CartScreen({ navigation }: any) {
         return item;
       });
       setItemsWithIds(updatedItems);
+      setLoading(false);
     };
 
     assignCartItemIds();
   }, [cartItems]);
+
+  if (loading) {
+    return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#f31f35" />
+        </View>
+    );
+  }
 
   const products = itemsWithIds.filter((item) => item.type === 'product');
   const rewards = itemsWithIds.filter((item) => item.type === 'reward');
@@ -42,7 +55,6 @@ export default function CartScreen({ navigation }: any) {
     buttonText = 'Canjear';
   }
 
-  // TODO: Optional make cart items clickable to navigate to product details
   return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -126,7 +138,7 @@ export default function CartScreen({ navigation }: any) {
                     </View>
                 )}
                 {buttonText && (
-                    <TouchableOpacity style={styles.donateButton} onPress={() => {}}>
+                    <TouchableOpacity style={styles.donateButton} onPress={() => { }}>
                       <Text style={styles.donateButtonText}>{buttonText}</Text>
                     </TouchableOpacity>
                 )}
@@ -230,5 +242,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#f31f35',
     fontWeight: 'bold',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
