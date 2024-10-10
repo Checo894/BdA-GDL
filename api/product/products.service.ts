@@ -36,6 +36,7 @@ export const getProducts = async (): Promise<Product[]> => {
                 stock_quantity: data.stock_quantity,
                 updated_at: data.updated_at,
                 is_featured: data.is_featured,
+                points_awarded: data.points_awarded,
             };
             return product;
         });

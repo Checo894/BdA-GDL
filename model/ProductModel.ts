@@ -11,4 +11,5 @@ export interface Product {
     stock_quantity: number;
     updated_at: Timestamp;
     is_featured: boolean;
+    points_awarded: number;
 }
