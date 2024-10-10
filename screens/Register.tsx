@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { RootStackParamList } from '../constants/RootStackParamList';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from '@react-navigation/native';
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  onAuthStateChanged
-} from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 
 type RegisterScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -15,6 +11,7 @@ export default function Register() {
   const [userName, setUserName] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation<RegisterScreenNavigationProp>();
   const auth = getAuth();
@@ -28,16 +25,18 @@ export default function Register() {
   }, [auth]);
 
   const handleRegister = async () => {
+    setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, userName, userPassword);
+      await createUserWithEmailAndPassword(auth, userName, userPassword);
+      setLoading(false);
       Alert.alert('Registro exitoso', '¡Usuario registrado correctamente!');
       navigation.navigate('Home');
     } catch (error: any) {
+      setLoading(false);
       Alert.alert('Error al registrarse', error.message);
     }
   };
 
-  // FIXME: Element appears when clicking on text input
   return (
       <View style={styles.container}>
         <View style={styles.first}></View>
@@ -60,8 +59,13 @@ export default function Register() {
             <TouchableOpacity
                 style={styles.redButton}
                 onPress={handleRegister}
+                disabled={loading}
             >
-              <Text style={styles.buttonText}>Regístrate</Text>
+              {loading ? (
+                  <ActivityIndicator size="small" color="#ffffff" />
+              ) : (
+                  <Text style={styles.buttonText}>Regístrate</Text>
+              )}
             </TouchableOpacity>
             <View style={styles.inlineTextContainer}>
               <Text style={styles.textBold}>¿Ya tienes cuenta? </Text>

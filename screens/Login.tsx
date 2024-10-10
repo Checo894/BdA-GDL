@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../constants/RootStackParamList';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -13,6 +13,7 @@ export default function Login() {
   const [userName, setUserName] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
@@ -26,13 +27,24 @@ export default function Login() {
   }, []);
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       // @ts-ignore - Implicit any typescript error ignore
       await signInWithEmailAndPassword(auth, userName, userPassword);
+      setLoading(false);
       Alert.alert('Inicio de sesión exitoso', '¡Bienvenido de nuevo!');
       navigation.navigate('Home');
     } catch (error: any) {
+      setLoading(false);
       Alert.alert('Error al iniciar sesión', error.message);
+    }
+  };
+
+  const handlePress = () => {
+    if (loading) {
+      console.log('Loading...');
+    } else {
+      navigation.navigate('Home');
     }
   };
 
@@ -58,12 +70,17 @@ export default function Login() {
             <TouchableOpacity
                 style={styles.redButton}
                 onPress={handleLogin}
+                disabled={loading}
             >
-              <Text style={styles.buttonText}>Ingresa</Text>
+              {loading ? (
+                  <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                  <Text style={styles.buttonText}>Ingresa</Text>
+              )}
             </TouchableOpacity>
             <View style={styles.inlineTextContainer}>
               <Text style={styles.textBold}>¿No tienes cuenta? </Text>
-              <Text style={styles.textGreen} onPress={() => navigation.navigate('Register')}>
+              <Text style={styles.textGreen} onPress={handlePress}>
                 Regístrate
               </Text>
             </View>
@@ -148,3 +165,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+

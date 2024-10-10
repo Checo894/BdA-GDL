@@ -1,10 +1,58 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Image, TouchableOpacity, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useCart } from '../context/CartContex';
+import { CartItem } from '../context/CartContex';
+import { getUserPoints } from "../api/user/user.points.service";
 
 export default function ProductCard({ route, navigation }: any) {
   const { item } = route.params;
+  const { addToCart } = useCart();
+
   const isProduct = item && typeof item === 'object' && 'price' in item;
+
+  const [userPoints, setUserPoints] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const points = await getUserPoints();
+        setUserPoints(points);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleAddToCart = () => {
+    const cartItem: CartItem = {
+      id: item.id,
+      name: item.name,
+      type: isProduct ? 'product' : 'reward',
+      image_url: item.image_url,
+      ...(isProduct ? { price: item.price } : { points_cost: item.points_cost }),
+    };
+    if (!isProduct) {
+      if (userPoints >= item.points_cost) {
+        console.log('redeemed a reward');
+        addToCart(cartItem);
+        navigation.navigate('Cart');
+      } else {
+        Alert.alert(
+            'Puntos insuficientes',
+            'No tienes suficientes puntos para canjear esta recompensa.',
+            [{ text: 'OK' }]
+        );
+      }
+    } else {
+      addToCart(cartItem);
+      navigation.navigate('Cart');
+    }
+  };
 
   return (
       <View style={styles.container}>
@@ -25,57 +73,30 @@ export default function ProductCard({ route, navigation }: any) {
           {item ? (
               <>
                 <Text style={styles.productTitle}>{item.name}</Text>
-                {/* Conditionally render product or reward attributes */}
                 {isProduct ? (
                     <>
                       <Text style={styles.productPrice}>MXN ${item.price}</Text>
-                      <Text style={styles.productDescription}>
-                        Stock disponible: {item.stock_quantity}
-                      </Text>
+                      <Text style={styles.productDescription}>Stock disponible: {item.stock_quantity}</Text>
                     </>
                 ) : (
-                    <>
-                      <Text style={styles.rewardPoints}>
-                        Costo en puntos: {item.points_cost} puntos
-                      </Text>
-                    </>
+                    <Text style={styles.rewardPoints}>Costo en puntos: {item.points_cost} puntos</Text>
                 )}
-
-                <Text style={styles.productDescription}>
-                  {item.description}
-                </Text>
-
-                {isProduct ? (
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => {
-                          //TODO: Add to cart logic here
-                        }}
-                    >
-                      <Text
-                          style={{color: '#fff', fontWeight: 'bold', fontSize: 16}}
-                      >
-                        Añadir al carrito
-                      </Text>
-                    </TouchableOpacity>
-                ) : (
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => {
-                          //TODO: Buy logic here
-                        }}
-                    >
-                      <Text
-                          style={{color: '#fff', fontWeight: 'bold', fontSize: 16}}
-                      >
-                        Canjear con puntos
-                      </Text>
-                    </TouchableOpacity>
-                )}
+                <Text style={styles.productDescription}>{item.description}</Text>
+                <TouchableOpacity style={styles.button} onPress={handleAddToCart}>
+                  <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
+                    {isProduct ? 'Añadir al carrito' : 'Canjear con puntos'}
+                  </Text>
+                </TouchableOpacity>
               </>
           ) : (
               <Text style={styles.loadingText}>Cargando...</Text>
           )}
+        </View>
+
+        <View style={styles.tabBar}>
+          <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.homeIconContainer}>
+            <Icon name="home-outline" size={30} color="#fff" />
+          </TouchableOpacity>
         </View>
       </View>
   );
@@ -135,5 +156,24 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  tabBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#EDEEEF',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 28,
+  },
+  homeIconContainer: {
+    backgroundColor: '#f31f35',
+    padding: 10,
+    borderRadius: 50,
   },
 });

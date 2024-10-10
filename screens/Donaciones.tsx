@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Image} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Image } from 'react-native';
 import { Product } from "../model/ProductModel";
 import { getProducts } from "../api/product/products.service";
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useCart } from '../context/CartContex';
+import { CartItem } from '../context/CartContex';
 
 export default function Donaciones({ navigation }: any) {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState<Product[]>([]);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,62 +25,70 @@ export default function Donaciones({ navigation }: any) {
     fetchData();
   }, []);
 
+  const handleAddToCart = (product: Product) => {
+    const cartItem: CartItem = {
+      id: product.id,
+      name: product.name,
+      type: 'product',
+      price: product.price,
+      image_url: product.image_url,
+    };
+    addToCart(cartItem);
+    navigation.navigate('Cart');
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Products Grid */}
-      <ScrollView contentContainerStyle={styles.productsGrid}>
-        <Icon
-            name="arrow-back-outline"
-            size={24}
-            onPress={() => navigation.goBack()}
-            style={styles.backIcon}
-        />
-        <Text style={styles.title}>Productos</Text>
-        <Text style={styles.description}>
-          ¡Aquí encontrarás todos los productos que ofrece BAMX!
-          describir como funcionan las donaciones !!!
-        </Text>
-        {products.length > 0 ? (
-            products.map((product) => (
-                <View key={product.id} style={styles.productCard}>
-                  <TouchableOpacity
-                      onPress={() => navigation.navigate('ProductCard', { item: product })}
-                  >
-                    <Image
-                        source={{ uri: product.image_url }}
-                        style={styles.productImage}
-                    />
-                    <View style={styles.productInfo}>
-                      <View style={styles.productNameStock}>
-                        <Text style={styles.productName}>{product.name}</Text>
-                        <Text style={styles.productStock}>Stock: {product.stock_quantity}</Text>
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.productsGrid}>
+          <Icon
+              name="arrow-back-outline"
+              size={24}
+              onPress={() => navigation.goBack()}
+              style={styles.backIcon}
+          />
+          <Text style={styles.title}>Productos</Text>
+          <Text style={styles.description}>
+            ¡Aquí encontrarás todos los productos que ofrece BAMX! describir como funcionan las donaciones !!!
+          </Text>
+          {loading ? (
+              <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+              products.map((product, index) => (
+                  <View key={product.id} style={styles.productCard}>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('ProductCard', { item: product })}
+                    >
+                      <Image
+                          source={{ uri: product.image_url }}
+                          style={styles.productImage}
+                      />
+                      <View style={styles.productInfo}>
+                        <View style={styles.productNameStock}>
+                          <Text style={styles.productName}>{product.name}</Text>
+                          <Text style={styles.productStock}>Stock: {product.stock_quantity}</Text>
+                        </View>
+                        <Text style={styles.productPrice}>MXN ${product.price}</Text>
+                        <Text style={styles.productDescription}>{product.description}</Text>
                       </View>
-                      <Text style={styles.productPrice}>MXN ${product.price}</Text>
-                      <Text style={styles.productDescription}>{product.description}</Text>
-                    </View>
-                  </TouchableOpacity>
+                    </TouchableOpacity>
 
-                  <TouchableOpacity
-                      style={styles.addToCartButton}
-                      onPress={() => {
-                        //TODO: Add to cart logic here
-                      }}
-                  >
-                    <Text style={styles.addToCartText}>Añadir al carrito</Text>
-                  </TouchableOpacity>
-                </View>
-            ))
-        ) : (
-            <ActivityIndicator size="large" color="#0000ff" />
-        )}
-      </ScrollView>
+                    <TouchableOpacity
+                        style={styles.addToCartButton}
+                        onPress={() => handleAddToCart(product)}
+                    >
+                      <Text style={styles.addToCartText}>Añadir al carrito</Text>
+                    </TouchableOpacity>
+                  </View>
+              ))
+          )}
+        </ScrollView>
 
-      <View style={styles.tabBar}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.homeIconContainer}>
-          <Icon name="home-outline" size={30} color="#fff" />
-        </TouchableOpacity>
+        <View style={styles.tabBar}>
+          <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.homeIconContainer}>
+            <Icon name="home-outline" size={30} color="#fff" />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
   );
 }
 
@@ -186,5 +197,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
-
