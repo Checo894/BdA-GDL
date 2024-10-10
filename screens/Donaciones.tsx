@@ -32,6 +32,7 @@ export default function Donaciones({ navigation }: any) {
       type: 'product',
       price: product.price,
       image_url: product.image_url,
+      points_awarded: product.points_awarded,
     };
     addToCart(cartItem);
     navigation.navigate('Cart');
@@ -68,6 +69,7 @@ export default function Donaciones({ navigation }: any) {
                           <Text style={styles.productStock}>Stock: {product.stock_quantity}</Text>
                         </View>
                         <Text style={styles.productPrice}>MXN ${product.price}</Text>
+                        <Text style={styles.productPoints}>Puntos ganados: {product.points_awarded}</Text>
                         <Text style={styles.productDescription}>{product.description}</Text>
                       </View>
                     </TouchableOpacity>
@@ -195,5 +197,13 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     fontWeight: '600',
     textAlign: 'center',
+  },
+  productPoints: {
+    fontSize: 14,
+    color: '#555',
+    marginTop: 5,
+    textAlign: 'left',
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
 });

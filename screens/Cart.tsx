@@ -31,6 +31,7 @@ export default function CartScreen({ navigation }: any) {
   const processingFee = subtotal > 0 ? 5.00 : 0;
   const total = subtotal + processingFee;
   const totalPoints = rewards.reduce((sum, item) => sum + (item.points_cost || 0), 0);
+  const pointsAwarded = products.reduce((sum, item) => sum + (item.points_awarded || 0), 0);
 
   let buttonText = '';
   if (products.length > 0 && rewards.length > 0) {
@@ -111,6 +112,10 @@ export default function CartScreen({ navigation }: any) {
                       <View style={styles.row}>
                         <Text style={styles.totalText}>Total</Text>
                         <Text style={styles.totalText}>MXN ${total.toFixed(2)}</Text>
+                      </View>
+                      <View style={styles.row}>
+                        <Text style={styles.pointsText}>Puntos a Ganar</Text>
+                        <Text style={styles.pointsText}>{pointsAwarded} puntos</Text>
                       </View>
                     </>
                 )}
@@ -220,5 +225,10 @@ const styles = StyleSheet.create({
     color: '#878380',
     textAlign: 'center',
     marginTop: 20,
+  },
+  pointsText: {
+    fontSize: 16,
+    color: '#f31f35',
+    fontWeight: 'bold',
   },
 });

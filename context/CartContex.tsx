@@ -8,6 +8,7 @@ export interface CartItem {
     image_url?: string;
     type: 'product' | 'reward';
     cartItemId?: string;
+    points_awarded: number;
 }
 
 interface CartContextProps {

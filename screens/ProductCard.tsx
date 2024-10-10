@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useCart } from '../context/CartContex';
@@ -34,6 +34,7 @@ export default function ProductCard({ route, navigation }: any) {
       name: item.name,
       type: isProduct ? 'product' : 'reward',
       image_url: item.image_url,
+      points_awarded: item.points_awarded,
       ...(isProduct ? { price: item.price } : { points_cost: item.points_cost }),
     };
     if (!isProduct) {
@@ -72,11 +73,14 @@ export default function ProductCard({ route, navigation }: any) {
         <View style={styles.productDetails}>
           {item ? (
               <>
-                <Text style={styles.productTitle}>{item.name}</Text>
+                <View style={styles.productNameStock}>
+                  <Text style={styles.productTitle}>{item.name}</Text>
+                  <Text style={styles.productDescription}>Stock disponible: {item.stock_quantity}</Text>
+                </View>
                 {isProduct ? (
                     <>
                       <Text style={styles.productPrice}>MXN ${item.price}</Text>
-                      <Text style={styles.productDescription}>Stock disponible: {item.stock_quantity}</Text>
+                      <Text style={styles.productPoints}>Puntos ganados: {item.points_awarded}</Text>
                     </>
                 ) : (
                     <Text style={styles.rewardPoints}>Costo en puntos: {item.points_cost} puntos</Text>
@@ -175,5 +179,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#f31f35',
     padding: 10,
     borderRadius: 50,
+  },
+  productPoints: {
+    fontSize: 14,
+    color: '#555',
+    marginTop: 5,
+    textAlign: 'left',
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  productNameStock: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 0,
   },
 });
