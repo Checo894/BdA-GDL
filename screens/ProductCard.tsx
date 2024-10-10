@@ -75,7 +75,9 @@ export default function ProductCard({ route, navigation }: any) {
               <>
                 <View style={styles.productNameStock}>
                   <Text style={styles.productTitle}>{item.name}</Text>
-                  <Text style={styles.productDescription}>Stock disponible: {item.stock_quantity}</Text>
+                  {item.stock_quantity != null &&
+                      <Text style={styles.productDescription}>Stock disponible: {item.stock_quantity}</Text>
+                  }
                 </View>
                 {isProduct ? (
                     <>
@@ -135,7 +137,7 @@ const styles = StyleSheet.create({
   },
   productPrice: {
     fontSize: 20,
-    marginVertical: 8,
+    marginVertical: 2,
     color: '#f31f35',
   },
   rewardPoints: {
@@ -186,7 +188,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textAlign: 'left',
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   productNameStock: {
     flexDirection: 'row',

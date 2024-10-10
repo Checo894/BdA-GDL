@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { setUserCart, getUserCart } from '../api/cart/user.cart.service';
 
 export interface CartItem {
     id: string;
@@ -22,13 +23,27 @@ const CartContext = createContext<CartContextProps | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
+    useEffect(() => {
+        const loadCart = async () => {
+            const loadedCartItems = await getUserCart();
+            setCartItems(loadedCartItems);
+        };
+
+        loadCart();
+    }, []);
+
     const addToCart = (item: CartItem) => {
         const updatedItem = { ...item, cartItemId: item.cartItemId || generateUniqueId() };
-        setCartItems(prevItems => [...prevItems, updatedItem]);
+        const updatedCartItems = [...cartItems, updatedItem];
+        setCartItems(updatedCartItems);
+        setUserCart(updatedCartItems);
     };
 
+    // Remove a cart item and update Firestore
     const removeFromCart = (cartItemId: string) => {
-        setCartItems(prevItems => prevItems.filter(item => item.cartItemId !== cartItemId));
+        const updatedCartItems = cartItems.filter(item => item.cartItemId !== cartItemId);
+        setCartItems(updatedCartItems);
+        setUserCart(updatedCartItems);
     };
 
     return (
