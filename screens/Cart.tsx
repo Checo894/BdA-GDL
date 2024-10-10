@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons'; 
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function CartScreen({ navigation }: any) {
   const [cartItems, setCartItems] = useState([
@@ -14,7 +14,7 @@ export default function CartScreen({ navigation }: any) {
   };
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
-  const total = subtotal + 0.01; 
+  const total = subtotal + 0.01;
 
   return (
     <View style={styles.container}>
@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#EDEEEF',
     paddingTop: 20,
+    paddingVertical: 28,
   },
   row: {
     flexDirection: 'row',
