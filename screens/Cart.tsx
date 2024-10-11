@@ -2,7 +2,7 @@
 //  -This may be better to implement in the ProductCard screen
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, ActivityIndicator, Animated, Dimensions, Easing } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { CartItem, useCart } from '../context/CartContex';
 
@@ -13,6 +13,7 @@ export default function CartScreen({ navigation }: any) {
 
   const [itemsWithIds, setItemsWithIds] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [balloons, setBalloons] = useState<Animated.Value[]>([]);
 
   useEffect(() => {
     const assignCartItemIds = () => {
@@ -29,11 +30,24 @@ export default function CartScreen({ navigation }: any) {
     assignCartItemIds();
   }, [cartItems]);
 
+  const startBalloonAnimation = () => {
+    const newBalloons = Array.from({ length: 20 }).map(() => new Animated.Value(Dimensions.get('window').height));
+    setBalloons(newBalloons);
+    newBalloons.forEach((balloon, index) => {
+      Animated.timing(balloon, {
+        toValue: -100,
+        duration: 4000 + index * 200,
+        easing: Easing.bezier(0.42, 0, 0.58, 1),
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
   if (loading) {
     return (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#f31f35" />
-        </View>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#f31f35" />
+      </View>
     );
   }
 
@@ -41,7 +55,7 @@ export default function CartScreen({ navigation }: any) {
   const rewards = itemsWithIds.filter((item) => item.type === 'reward');
 
   const subtotal = products.reduce((sum, item) => sum + (item.price || 0), 0);
-  const processingFee = subtotal > 0 ? 5.00 : 0;
+  const processingFee = subtotal > 0 ? 5.0 : 0;
   const total = subtotal + processingFee;
   const totalPoints = rewards.reduce((sum, item) => sum + (item.points_cost || 0), 0);
   const pointsAwarded = products.reduce((sum, item) => sum + (item.points_awarded || 0), 0);
@@ -56,96 +70,119 @@ export default function CartScreen({ navigation }: any) {
   }
 
   return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Icon name="arrow-back-outline" size={24} onPress={() => navigation.goBack()} />
-          <Text style={styles.title}>Carrito</Text>
-        </View>
-
-        {cartItems.length === 0 ? (
-            <Text style={styles.emptyCartText}>No hay nada en el carrito</Text>
-        ) : (
-            <>
-              {rewards.length > 0 && (
-                  <>
-                    <Text style={styles.sectionTitle}>Recompensas</Text>
-                    <FlatList
-                        data={rewards}
-                        keyExtractor={(item) => item.cartItemId!}
-                        renderItem={({ item }) => (
-                            <View style={styles.cartItem}>
-                              <Image source={{ uri: item.image_url }} style={styles.productImage} />
-                              <View style={styles.productDetails}>
-                                <Text style={styles.productName}>{item.name}</Text>
-                                <Text style={styles.rewardPoints}>Costo: {item.points_cost} puntos</Text>
-                              </View>
-                              <TouchableOpacity onPress={() => removeFromCart(item.cartItemId!)}>
-                                <Icon name="trash-outline" size={24} color="#878380" />
-                              </TouchableOpacity>
-                            </View>
-                        )}
-                    />
-                  </>
-              )}
-
-              {products.length > 0 && (
-                  <>
-                    <Text style={styles.sectionTitle}>Donaciones</Text>
-                    <FlatList
-                        data={products}
-                        keyExtractor={(item) => item.cartItemId!}
-                        renderItem={({ item }) => (
-                            <View style={styles.cartItem}>
-                              <Image source={{ uri: item.image_url }} style={styles.productImage} />
-                              <View style={styles.productDetails}>
-                                <Text style={styles.productName}>{item.name}</Text>
-                                <Text style={styles.productPrice}>${item.price?.toFixed(2)}</Text>
-                              </View>
-                              <TouchableOpacity onPress={() => removeFromCart(item.cartItemId!)}>
-                                <Icon name="trash-outline" size={24} color="#878380" />
-                              </TouchableOpacity>
-                            </View>
-                        )}
-                    />
-                  </>
-              )}
-
-              <View style={styles.summaryContainer}>
-                {products.length > 0 && (
-                    <>
-                      <View style={styles.row}>
-                        <Text style={styles.subtotalText}>Subtotal</Text>
-                        <Text style={styles.subtotalText}>${subtotal.toFixed(2)}</Text>
-                      </View>
-                      <View style={styles.row}>
-                        <Text style={styles.subtotalText}>Cuota de procesamiento</Text>
-                        <Text style={styles.subtotalText}>${processingFee.toFixed(2)}</Text>
-                      </View>
-                      <View style={styles.row}>
-                        <Text style={styles.totalText}>Total</Text>
-                        <Text style={styles.totalText}>MXN ${total.toFixed(2)}</Text>
-                      </View>
-                      <View style={styles.row}>
-                        <Text style={styles.pointsText}>Puntos a Ganar</Text>
-                        <Text style={styles.pointsText}>{pointsAwarded} puntos</Text>
-                      </View>
-                    </>
-                )}
-                {rewards.length > 0 && (
-                    <View style={styles.row}>
-                      <Text style={styles.totalText}>Total de puntos</Text>
-                      <Text style={styles.totalText}>{totalPoints} puntos</Text>
-                    </View>
-                )}
-                {buttonText && (
-                    <TouchableOpacity style={styles.donateButton} onPress={() => { }}>
-                      <Text style={styles.donateButtonText}>{buttonText}</Text>
-                    </TouchableOpacity>
-                )}
-              </View>
-            </>
-        )}
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Icon name="arrow-back-outline" size={24} onPress={() => navigation.goBack()} />
+        <Text style={styles.title}>Carrito</Text>
       </View>
+
+      {cartItems.length === 0 ? (
+        <Text style={styles.emptyCartText}>No hay nada en el carrito</Text>
+      ) : (
+        <>
+          {rewards.length > 0 && (
+            <>
+              <Text style={styles.sectionTitle}>Recompensas</Text>
+              <FlatList
+                data={rewards}
+                keyExtractor={(item) => item.cartItemId!}
+                renderItem={({ item }) => (
+                  <View style={styles.cartItem}>
+                    <Image source={{ uri: item.image_url }} style={styles.productImage} />
+                    <View style={styles.productDetails}>
+                      <Text style={styles.productName}>{item.name}</Text>
+                      <Text style={styles.rewardPoints}>Costo: {item.points_cost} puntos</Text>
+                    </View>
+                    <TouchableOpacity onPress={() => removeFromCart(item.cartItemId!)}>
+                      <Icon name="trash-outline" size={24} color="#878380" />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              />
+            </>
+          )}
+
+          {products.length > 0 && (
+            <>
+              <Text style={styles.sectionTitle}>Donaciones</Text>
+              <FlatList
+                data={products}
+                keyExtractor={(item) => item.cartItemId!}
+                renderItem={({ item }) => (
+                  <View style={styles.cartItem}>
+                    <Image source={{ uri: item.image_url }} style={styles.productImage} />
+                    <View style={styles.productDetails}>
+                      <Text style={styles.productName}>{item.name}</Text>
+                      <Text style={styles.productPrice}>${item.price?.toFixed(2)}</Text>
+                    </View>
+                    <TouchableOpacity onPress={() => removeFromCart(item.cartItemId!)}>
+                      <Icon name="trash-outline" size={24} color="#878380" />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              />
+            </>
+          )}
+
+          <View style={styles.summaryContainer}>
+            {products.length > 0 && (
+              <>
+                <View style={styles.row}>
+                  <Text style={styles.subtotalText}>Subtotal</Text>
+                  <Text style={styles.subtotalText}>${subtotal.toFixed(2)}</Text>
+                </View>
+                <View style={styles.row}>
+                  <Text style={styles.subtotalText}>Cuota de procesamiento</Text>
+                  <Text style={styles.subtotalText}>${processingFee.toFixed(2)}</Text>
+                </View>
+                <View style={styles.row}>
+                  <Text style={styles.totalText}>Total</Text>
+                  <Text style={styles.totalText}>MXN ${total.toFixed(2)}</Text>
+                </View>
+                <View style={styles.row}>
+                  <Text style={styles.pointsText}>Puntos a Ganar</Text>
+                  <Text style={styles.pointsText}>{pointsAwarded} puntos</Text>
+                </View>
+              </>
+            )}
+            {rewards.length > 0 && (
+              <View style={styles.row}>
+                <Text style={styles.totalText}>Total de puntos</Text>
+                <Text style={styles.totalText}>{totalPoints} puntos</Text>
+              </View>
+            )}
+            {buttonText && (
+              <TouchableOpacity
+                style={styles.donateButton}
+                onPress={() => {
+                  startBalloonAnimation();
+                }}
+              >
+                <Text style={styles.donateButtonText}>{buttonText}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </>
+      )}
+
+      {balloons.map((balloon, index) => (
+        <Animated.View
+          key={index}
+          style={[
+            styles.balloon,
+            {
+              transform: [{ translateY: balloon }],
+              left: Math.random() * Dimensions.get('window').width,
+            },
+          ]}
+        >
+          <Image
+            source={require('../assets/balloon.png')}
+            style={styles.balloonImage}
+          />
+        </Animated.View>
+      ))}
+    </View>
   );
 }
 
@@ -247,5 +284,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  balloon: {
+    position: 'absolute',
+    width: 70, 
+    height: 100, 
+  },
+  balloonImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
   },
 });

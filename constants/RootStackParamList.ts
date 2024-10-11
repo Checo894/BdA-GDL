@@ -8,4 +8,9 @@ export type RootStackParamList = {
     Cart: undefined;
     Profile: undefined;
     Rewards: undefined;
+    ConfProfile: undefined;
+    ConfPassword: undefined;
+    ConfNotification: undefined;
+    Reviews: undefined;
+    Help: undefined;
 };

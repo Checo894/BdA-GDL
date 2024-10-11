@@ -15,6 +15,11 @@ import ProductCard from './screens/ProductCard';
 import Cart from './screens/Cart';
 import Profile from './screens/Profile';
 import Rewards from './screens/Rewards';
+import ConfProfile from './screens/ConfProfile';
+import ConfPassword from './screens/ConfPassword';
+import ConfNotification from './screens/ConfNotification';
+import Reviews from './screens/Reviews';
+import Help from './screens/Help';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -40,7 +45,7 @@ export default function App() {
   return (
       <CartProvider>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Inicio">
+          <Stack.Navigator initialRouteName="Inicio" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Inicio" component={Inicio} options={{ headerShown: false }} />
             <Stack.Screen name="Home" component={Home}  options={{ headerShown: false }} />
             <Stack.Screen name="Register" component={Register}  options={{ headerShown: false }} />
@@ -50,6 +55,11 @@ export default function App() {
             <Stack.Screen name="Cart" component={Cart} />
             <Stack.Screen name="Profile" component={Profile} />
             <Stack.Screen name="Rewards" component={Rewards} />
+            <Stack.Screen name="ConfProfile" component={ConfProfile} />
+            <Stack.Screen name="ConfPassword" component={ConfPassword} />
+            <Stack.Screen name="ConfNotification" component={ConfNotification} />
+            <Stack.Screen name="Reviews" component={Reviews} />
+            <Stack.Screen name="Help" component={Help} />
           </Stack.Navigator>
         </NavigationContainer>
       </CartProvider>

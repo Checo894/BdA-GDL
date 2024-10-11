@@ -14,7 +14,7 @@ export default function ProfileScreen({ navigation }: any) {
         />
         <Text style={styles.sectionTitle}>Cuenta</Text>
 
-        <TouchableOpacity style={styles.option} onPress={() => {}}>
+        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('ConfProfile')}>
           <View style={styles.optionLeft}>
             <Icon name="person-outline" size={24} color="#000" />
             <Text style={styles.optionText}>Perfil</Text>
@@ -22,7 +22,7 @@ export default function ProfileScreen({ navigation }: any) {
           <Icon name="chevron-forward-outline" size={24} color="#000" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={() => {}}>
+        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('ConfPassword')}>
           <View style={styles.optionLeft}>
             <Icon name="lock-closed-outline" size={24} color="#000" />
             <Text style={styles.optionText}>Contraseña</Text>
@@ -30,7 +30,7 @@ export default function ProfileScreen({ navigation }: any) {
           <Icon name="chevron-forward-outline" size={24} color="#000" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={() => {}}>
+        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('ConfNotification')}>
           <View style={styles.optionLeft}>
             <Icon name="notifications-outline" size={24} color="#000" />
             <Text style={styles.optionText}>Notificaciones</Text>
@@ -42,7 +42,7 @@ export default function ProfileScreen({ navigation }: any) {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Más</Text>
 
-        <TouchableOpacity style={styles.option} onPress={() => {}}>
+        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Reviews')}>
           <View style={styles.optionLeft}>
             <Icon name="star-outline" size={24} color="#000" />
             <Text style={styles.optionText}>Reseñas</Text>
@@ -50,7 +50,7 @@ export default function ProfileScreen({ navigation }: any) {
           <Icon name="chevron-forward-outline" size={24} color="#000" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={() => {}}>
+        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Help')}>
           <View style={styles.optionLeft}>
             <Icon name="help-circle-outline" size={24} color="#000" />
             <Text style={styles.optionText}>Ayuda</Text>
@@ -59,8 +59,8 @@ export default function ProfileScreen({ navigation }: any) {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.logoutButton} onPress={() => {}}>
-        <Text style={styles.logoutText}>Cerrar Sesion</Text>
+      <TouchableOpacity style={styles.lightLogoutButton} onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.lightLogoutText}>Cerrar sesión</Text>
       </TouchableOpacity>
 
       <View style={styles.tabBar}>
@@ -111,6 +111,14 @@ const styles = StyleSheet.create({
   logoutText: {
     fontSize: 16,
     color: '#878380',
+  },
+  lightLogoutButton: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  lightLogoutText: {
+    fontSize: 14,
+    color: '#C0C0C0',
   },
   tabBar: {
     position: 'absolute',
