@@ -28,75 +28,100 @@ export default function RewardsScreen({ navigation }: any) {
   }, []);
 
   return (
-      <View style={styles.container}>
-        <Icon
-            name="arrow-back-outline"
-            size={24}
-            onPress={() => navigation.goBack()}
-            style={styles.backIcon}
-        />
-        <Text style={styles.title}>BAMX</Text>
-        <Text style={styles.subtitle}>Recompensas</Text>
+    <View style={styles.container}>
+      <Icon
+        name="arrow-back-outline"
+        size={24}
+        onPress={() => navigation.goBack()}
+        style={styles.backIcon}
+      />
+      <Text style={styles.title}>BAMX</Text>
+      <Text style={styles.subtitle}>Recompensas</Text>
 
-        <View style={styles.progressBarContainer}>
-          <View style={styles.progressBar}>
-            <View style={[styles.progress, { width: `${Math.min(userPoints, 100)}%` }]} />
-          </View>
-        </View>
-        <Text style={styles.pointsText}>Puntos acumulados: {userPoints} Puntos</Text>
-
-        <View style={styles.tabContainer}>
-          <TouchableOpacity
-              style={[styles.tab, selectedTab === 'Detalles' && styles.tabSelected]}
-              onPress={() => setSelectedTab('Detalles')}
-          >
-            <Text style={selectedTab === 'Detalles' ? styles.tabTextSelected : styles.tabText}>Detalles</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-              style={[styles.tab, selectedTab === 'Recompensas' && styles.tabSelected]}
-              onPress={() => setSelectedTab('Recompensas')}
-          >
-            <Text style={selectedTab === 'Recompensas' ? styles.tabTextSelected : styles.tabText}>Recompensas</Text>
-          </TouchableOpacity>
-        </View>
-
-        {loading ? (
-            <ActivityIndicator size="large" color="#0000ff" style={styles.loadingIndicator} />
-        ) : (
-            selectedTab === 'Recompensas' ? (
-                <FlatList
-                    data={rewards}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            style={styles.rewardItem}
-                            onPress={() => navigation.navigate('ProductCard', { item })}
-                        >
-                          <Image source={{ uri: item.image_url }} style={styles.rewardImage} />
-                          <View style={styles.rewardTextContainer}>
-                            <Text style={styles.rewardTitle}>{item.name}</Text>
-                            <Text style={styles.rewardDescription}>{item.description}</Text>
-                            <Text style={styles.rewardPoints}>Costo: {item.points_cost} puntos</Text>
-                          </View>
-                        </TouchableOpacity>
-                    )}
-                    contentContainerStyle={styles.listContainer}
-                    style={styles.flatList}
-                />
-            ) : (
-                <Text style={styles.detailsText}>
-                  Aquí encontrarás detalles sobre cómo funciona el programa de recompensas y cómo puedes usar tus puntos.
-                </Text>
-            )
-        )}
-
-        <View style={styles.tabBar}>
-          <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.homeIconContainer}>
-            <Icon name="home-outline" size={30} color="#fff" />
-          </TouchableOpacity>
+      <View style={styles.progressBarContainer}>
+        <View style={styles.progressBar}>
+          <View style={[styles.progress, { width: `${Math.min(userPoints, 100)}%` }]} />
         </View>
       </View>
+      <Text style={styles.pointsText}>Puntos acumulados: {userPoints} Puntos</Text>
+
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={[styles.tab, selectedTab === 'Detalles' && styles.tabSelected]}
+          onPress={() => setSelectedTab('Detalles')}
+        >
+          <Text style={selectedTab === 'Detalles' ? styles.tabTextSelected : styles.tabText}>Detalles</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.tab, selectedTab === 'Recompensas' && styles.tabSelected]}
+          onPress={() => setSelectedTab('Recompensas')}
+        >
+          <Text style={selectedTab === 'Recompensas' ? styles.tabTextSelected : styles.tabText}>Recompensas</Text>
+        </TouchableOpacity>
+      </View>
+
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" style={styles.loadingIndicator} />
+      ) : (
+        selectedTab === 'Recompensas' ? (
+          <FlatList
+            data={rewards}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.rewardItem}
+                onPress={() => navigation.navigate('ProductCard', { item })}
+              >
+                <Image source={{ uri: item.image_url }} style={styles.rewardImage} />
+                <View style={styles.rewardTextContainer}>
+                  <Text style={styles.rewardTitle}>{item.name}</Text>
+                  <Text style={styles.rewardDescription}>{item.description}</Text>
+                  <Text style={styles.rewardPoints}>Costo: {item.points_cost} puntos</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            contentContainerStyle={styles.listContainer}
+            style={styles.flatList}
+          />
+        ) : (
+          <Text style={styles.detailsText}>
+            <Text style={styles.boldText}>¡Bienvenido al emocionante mundo de las recompensas BAMX!</Text>
+            {"\n\n"}
+            <Text style={styles.sectionTitle}>¿Cómo funciona?</Text>
+            {"\n"}- Cada vez que <Text style={styles.boldText}>donas</Text>, estás ayudando a una <Text style={styles.boldText}>familia</Text> necesitada.
+            {"\n"}- Además, acumulas <Text style={styles.boldText}>puntos</Text> que puedes canjear por <Text style={styles.boldText}>beneficios exclusivos</Text>.
+            {"\n\n"}
+            <Text style={styles.sectionTitle}>¿Qué puedes obtener?</Text>
+            {"\n"}- Cupones 2x1
+            {"\n"}- Descuentos especiales
+            {"\n"}- Productos únicos
+            {"\n\n"}
+            <Text style={styles.boldText}>¡Ayuda y gana al mismo tiempo!</Text>
+            {"\n"}Con BAMX, no solo contribuyes a una buena causa, sino que también recibes <Text style={styles.boldText}>recompensas</Text> por tu generosidad.
+            {"\n"}¡Juntos podemos hacer la diferencia!
+          </Text>
+        )
+      )}
+
+      <View style={styles.tabBar}>
+        <TouchableOpacity onPress={() => navigation.navigate('Donaciones')}>
+          <Icon name="grid-outline" size={30} />
+        </TouchableOpacity>
+        <View style={styles.rewardsIconContainer}>
+          <Icon name="star-outline" size={30} color="#fff" />
+        </View>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Icon name="home-outline" size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+          <Icon name="cart-outline" size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <Icon name="person-outline" size={30} />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
@@ -210,8 +235,18 @@ const styles = StyleSheet.create({
   detailsText: {
     fontSize: 16,
     color: '#555',
-    textAlign: 'center',
+    textAlign: 'left',
     marginVertical: 20,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#f31f35',
+    marginTop: 10,
   },
   tabBar: {
     position: 'absolute',
@@ -223,11 +258,11 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#EDEEEF',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
     paddingVertical: 28,
   },
-  homeIconContainer: {
+  rewardsIconContainer: {
     backgroundColor: '#f31f35',
     padding: 10,
     borderRadius: 50,

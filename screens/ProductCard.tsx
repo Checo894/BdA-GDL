@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity, Alert} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useCart } from '../context/CartContex';
 import { CartItem } from '../context/CartContex';
@@ -44,9 +44,9 @@ export default function ProductCard({ route, navigation }: any) {
         navigation.navigate('Cart');
       } else {
         Alert.alert(
-            'Puntos insuficientes',
-            'No tienes suficientes puntos para canjear esta recompensa.',
-            [{ text: 'OK' }]
+          'Puntos insuficientes',
+          'No tienes suficientes puntos para canjear esta recompensa.',
+          [{ text: 'OK' }]
         );
       }
     } else {
@@ -56,55 +56,68 @@ export default function ProductCard({ route, navigation }: any) {
   };
 
   return (
-      <View style={styles.container}>
-        <Icon
-            name="arrow-back-outline"
-            size={24}
-            onPress={() => navigation.goBack()}
-            style={styles.backIcon}
-        />
-        <View style={styles.productImageContainer}>
-          {item && item.image_url ? (
-              <Image source={{ uri: item.image_url }} style={styles.productImage} />
-          ) : (
-              <Text>Image Slider Placeholder</Text>
-          )}
-        </View>
-        <View style={styles.productDetails}>
-          {item ? (
-              <>
-                <View style={styles.productNameStock}>
-                  <Text style={styles.productTitle}>{item.name}</Text>
-                  {item.stock_quantity != null &&
-                      <Text style={styles.productDescription}>Stock disponible: {item.stock_quantity}</Text>
-                  }
-                </View>
-                {isProduct ? (
-                    <>
-                      <Text style={styles.productPrice}>MXN ${item.price}</Text>
-                      <Text style={styles.productPoints}>Puntos ganados: {item.points_awarded}</Text>
-                    </>
-                ) : (
-                    <Text style={styles.rewardPoints}>Costo en puntos: {item.points_cost} puntos</Text>
-                )}
-                <Text style={styles.productDescription}>{item.description}</Text>
-                <TouchableOpacity style={styles.button} onPress={handleAddToCart}>
-                  <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
-                    {isProduct ? 'Añadir al carrito' : 'Canjear con puntos'}
-                  </Text>
-                </TouchableOpacity>
-              </>
-          ) : (
-              <Text style={styles.loadingText}>Cargando...</Text>
-          )}
-        </View>
-
-        <View style={styles.tabBar}>
-          <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.homeIconContainer}>
-            <Icon name="home-outline" size={30} color="#fff" />
-          </TouchableOpacity>
-        </View>
+    <View style={styles.container}>
+      <Icon
+        name="arrow-back-outline"
+        size={24}
+        onPress={() => navigation.goBack()}
+        style={styles.backIcon}
+      />
+      <View style={styles.productImageContainer}>
+        {item && item.image_url ? (
+          <Image source={{ uri: item.image_url }} style={styles.productImage} />
+        ) : (
+          <Text>Image Slider Placeholder</Text>
+        )}
       </View>
+      <View style={styles.productDetails}>
+        {item ? (
+          <>
+            <View style={styles.productNameStock}>
+              <Text style={styles.productTitle}>{item.name}</Text>
+              {item.stock_quantity != null && (
+                <Text style={styles.productDescription}>Stock disponible: {item.stock_quantity}</Text>
+              )}
+            </View>
+            {isProduct ? (
+              <>
+                <Text style={styles.productPrice}>MXN ${item.price}</Text>
+                <Text style={styles.productPoints}>Puntos ganados: {item.points_awarded}</Text>
+              </>
+            ) : (
+              <Text style={styles.rewardPoints}>Costo en puntos: {item.points_cost} puntos</Text>
+            )}
+            <Text style={styles.productDescription}>{item.description}</Text>
+            <TouchableOpacity style={styles.button} onPress={handleAddToCart}>
+              <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
+                {isProduct ? 'Añadir al carrito' : 'Canjear con puntos'}
+              </Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <Text style={styles.loadingText}>Cargando...</Text>
+        )}
+      </View>
+
+      {/* Barra de navegación manual */}
+      <View style={styles.tabBar}>
+        <View style={styles.gridIconContainer}>
+          <Icon name="grid-outline" size={30} color="#fff" />
+        </View>
+        <TouchableOpacity onPress={() => navigation.navigate('Rewards')}>
+          <Icon name="star-outline" size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Icon name="home-outline" size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+          <Icon name="cart-outline" size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <Icon name="person-outline" size={30} />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
@@ -173,12 +186,17 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#EDEEEF',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
     paddingVertical: 28,
   },
-  homeIconContainer: {
+  gridIconContainer: {
     backgroundColor: '#f31f35',
+    padding: 10,
+    borderRadius: 50,
+  },
+  homeIconContainer: {
+    backgroundColor: '#fff',
     padding: 10,
     borderRadius: 50,
   },
@@ -197,3 +215,4 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
 });
+

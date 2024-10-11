@@ -7,10 +7,10 @@ export default function ProfileScreen({ navigation }: any) {
     <View style={styles.container}>
       <View style={styles.section}>
         <Icon
-            name="arrow-back-outline"
-            size={24}
-            onPress={() => navigation.goBack()}
-            style={styles.backIcon}
+          name="arrow-back-outline"
+          size={24}
+          onPress={() => navigation.goBack()}
+          style={styles.backIcon}
         />
         <Text style={styles.sectionTitle}>Cuenta</Text>
 
@@ -64,9 +64,21 @@ export default function ProfileScreen({ navigation }: any) {
       </TouchableOpacity>
 
       <View style={styles.tabBar}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.homeIconContainer}>
-          <Icon name="home-outline" size={30} color="#fff" />
+        <TouchableOpacity onPress={() => navigation.navigate('Donaciones')}>
+          <Icon name="grid-outline" size={30} />
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Rewards')}>
+          <Icon name="star-outline" size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Icon name="home-outline" size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+          <Icon name="cart-outline" size={30} />
+        </TouchableOpacity>
+        <View style={styles.profileIconContainer}>
+          <Icon name="person-outline" size={30} color="#fff" />
+        </View>
       </View>
     </View>
   );
@@ -130,12 +142,17 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#EDEEEF',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
     paddingVertical: 28,
   },
-  homeIconContainer: {
+  profileIconContainer: {
     backgroundColor: '#f31f35',
+    padding: 10,
+    borderRadius: 50,
+  },
+  homeIconContainer: {
+    backgroundColor: '#fff',
     padding: 10,
     borderRadius: 50,
   },
