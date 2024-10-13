@@ -37,3 +37,43 @@ yarn-error.*
 bamx_firestore_private_key.json
 .idea/
 
+# WEB
+
+# dependencies
+web/bamx-web/node_modules
+web/bamx-web/.pnp
+web/bamx-web/.pnp.js
+web/bamx-web/.yarn/install-state.gz
+
+# testing
+web/bamx-web/coverage
+
+# next.js
+web/bamx-web/.next/
+web/bamx-web/out/
+
+# production
+web/bamx-web/build
+
+# misc
+web/bamx-web.DS_Store
+web/bamx-web/*.pem
+
+# debug
+web/bamx-web/npm-debug.log*
+web/bamx-web/yarn-debug.log*
+yweb/bamx-web/arn-error.log*
+
+# local env files
+web/bamx-web/.env*.local
+
+# vercel
+web/bamx-web/.vercel
+
+# typescript
+web/bamx-web/*.tsbuildinfo
+web/bamx-web/next-env.d.ts
+
+web/bamx-web/.idea
+web/bamx-web/.env
+
