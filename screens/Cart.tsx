@@ -71,8 +71,21 @@ export default function CartScreen({ navigation }: any) {
 
   return (
     <View style={styles.container}>
+      <View style={styles.spacer}>
+        {/* Back Icon */}
+        <View style={styles.backContainer}>
+          <Icon
+              name="arrow-back-outline"
+              size={24}
+              onPress={() => navigation.goBack()}
+              style={styles.backIcon}
+              color="#5e5e5e"
+          />
+          <Text style={styles.backtext}>Regresar</Text>
+        </View>
+      </View>
+
       <View style={styles.header}>
-        <Icon name="arrow-back-outline" size={24} onPress={() => navigation.goBack()} />
         <Text style={styles.title}>Carrito</Text>
       </View>
 
@@ -287,12 +300,29 @@ const styles = StyleSheet.create({
   },
   balloon: {
     position: 'absolute',
-    width: 70, 
-    height: 100, 
+    width: 70,
+    height: 100,
   },
   balloonImage: {
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
+  },
+  backContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backtext: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
+    paddingBottom: 6,
+    color: '#5e5e5e',
+  },
+  backIcon: {
+    marginBottom: 8,
+  },
+  spacer: {
+    marginTop: 42,
   },
 });
