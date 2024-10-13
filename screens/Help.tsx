@@ -11,9 +11,19 @@ export default function Help({ navigation }: { navigation: any }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Icon name="arrow-back-outline" size={24} color="#000" />
-      </TouchableOpacity>
+      <View style={styles.spacer}>
+        {/* Back Icon */}
+        <View style={styles.backContainer}>
+          <Icon
+              name="arrow-back-outline"
+              size={24}
+              onPress={() => navigation.goBack()}
+              style={styles.backIcon}
+              color="#5e5e5e"
+          />
+          <Text style={styles.backtext}>Regresar</Text>
+        </View>
+      </View>
       <Text style={styles.sectionTitle}>Ayuda</Text>
       <View style={styles.faqContainer}>
         <TouchableOpacity style={styles.questionBox} onPress={() => toggleQuestion('q1')}>
@@ -102,5 +112,23 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     backgroundColor: '#e8e8e8',
     borderRadius: 5,
+  },
+  spacer: {
+    marginTop: 42,
+  },
+  backContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  backIcon: {
+    marginBottom: 4,
+  },
+  backtext: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
+    paddingBottom: 6,
+    color: '#5e5e5e',
   },
 });

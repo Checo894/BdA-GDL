@@ -35,4 +35,5 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 bamx_firestore_private_key.json
+.idea/
 

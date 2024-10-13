@@ -5,63 +5,70 @@ import Icon from 'react-native-vector-icons/Ionicons';
 export default function ProfileScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
-      <View style={styles.section}>
-        <Icon
-          name="arrow-back-outline"
-          size={24}
-          onPress={() => navigation.goBack()}
-          style={styles.backIcon}
-        />
-        <Text style={styles.sectionTitle}>Cuenta</Text>
-
-        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('ConfProfile')}>
-          <View style={styles.optionLeft}>
-            <Icon name="person-outline" size={24} color="#000" />
-            <Text style={styles.optionText}>Perfil</Text>
+      <View style={styles.spacer}>
+        <View style={styles.section}>
+          {/* Back Icon */}
+          <View style={styles.backContainer}>
+            <Icon
+                name="arrow-back-outline"
+                size={24}
+                onPress={() => navigation.goBack()}
+                style={styles.backIcon}
+                color="#5e5e5e"
+            />
+            <Text style={styles.backtext}>Regresar</Text>
           </View>
-          <Icon name="chevron-forward-outline" size={24} color="#000" />
-        </TouchableOpacity>
+          <Text style={styles.sectionTitle}>Cuenta</Text>
 
-        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('ConfPassword')}>
-          <View style={styles.optionLeft}>
-            <Icon name="lock-closed-outline" size={24} color="#000" />
-            <Text style={styles.optionText}>Contraseña</Text>
-          </View>
-          <Icon name="chevron-forward-outline" size={24} color="#000" />
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('ConfProfile')}>
+            <View style={styles.optionLeft}>
+              <Icon name="person-outline" size={24} color="#000" />
+              <Text style={styles.optionText}>Perfil</Text>
+            </View>
+            <Icon name="chevron-forward-outline" size={24} color="#000" />
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('ConfNotification')}>
-          <View style={styles.optionLeft}>
-            <Icon name="notifications-outline" size={24} color="#000" />
-            <Text style={styles.optionText}>Notificaciones</Text>
-          </View>
-          <Icon name="chevron-forward-outline" size={24} color="#000" />
+          <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('ConfPassword')}>
+            <View style={styles.optionLeft}>
+              <Icon name="lock-closed-outline" size={24} color="#000" />
+              <Text style={styles.optionText}>Contraseña</Text>
+            </View>
+            <Icon name="chevron-forward-outline" size={24} color="#000" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('ConfNotification')}>
+            <View style={styles.optionLeft}>
+              <Icon name="notifications-outline" size={24} color="#000" />
+              <Text style={styles.optionText}>Notificaciones</Text>
+            </View>
+            <Icon name="chevron-forward-outline" size={24} color="#000" />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Más</Text>
+
+          <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Reviews')}>
+            <View style={styles.optionLeft}>
+              <Icon name="star-outline" size={24} color="#000" />
+              <Text style={styles.optionText}>Reseñas</Text>
+            </View>
+            <Icon name="chevron-forward-outline" size={24} color="#000" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Help')}>
+            <View style={styles.optionLeft}>
+              <Icon name="help-circle-outline" size={24} color="#000" />
+              <Text style={styles.optionText}>Ayuda</Text>
+            </View>
+            <Icon name="chevron-forward-outline" size={24} color="#000" />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.lightLogoutButton} onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.lightLogoutText}>Cerrar sesión</Text>
         </TouchableOpacity>
       </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Más</Text>
-
-        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Reviews')}>
-          <View style={styles.optionLeft}>
-            <Icon name="star-outline" size={24} color="#000" />
-            <Text style={styles.optionText}>Reseñas</Text>
-          </View>
-          <Icon name="chevron-forward-outline" size={24} color="#000" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Help')}>
-          <View style={styles.optionLeft}>
-            <Icon name="help-circle-outline" size={24} color="#000" />
-            <Text style={styles.optionText}>Ayuda</Text>
-          </View>
-          <Icon name="chevron-forward-outline" size={24} color="#000" />
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity style={styles.lightLogoutButton} onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.lightLogoutText}>Cerrar sesión</Text>
-      </TouchableOpacity>
 
       <View style={styles.tabBar}>
         <TouchableOpacity onPress={() => navigation.navigate('Donaciones')}>
@@ -157,6 +164,20 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   backIcon: {
-    marginBottom: 20,
+    marginBottom: 6,
+  },
+  backContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backtext: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
+    paddingBottom: 6,
+    color: '#5e5e5e',
+  },
+  spacer: {
+    marginVertical: 42,
   },
 });

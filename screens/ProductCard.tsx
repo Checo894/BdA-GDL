@@ -57,12 +57,19 @@ export default function ProductCard({ route, navigation }: any) {
 
   return (
     <View style={styles.container}>
-      <Icon
-        name="arrow-back-outline"
-        size={24}
-        onPress={() => navigation.goBack()}
-        style={styles.backIcon}
-      />
+      <View style={styles.spacer}>
+        {/* Back Icon */}
+        <View style={styles.backContainer}>
+          <Icon
+              name="arrow-back-outline"
+              size={24}
+              onPress={() => navigation.goBack()}
+              style={styles.backIcon}
+              color="#5e5e5e"
+          />
+          <Text style={styles.backtext}>Regresar</Text>
+        </View>
+      </View>
       <View style={styles.productImageContainer}>
         {item && item.image_url ? (
           <Image source={{ uri: item.image_url }} style={styles.productImage} />
@@ -128,7 +135,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   backIcon: {
-    marginBottom: 20,
+    marginBottom: 4,
   },
   productImageContainer: {
     height: 200,
@@ -213,6 +220,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     marginBottom: 0,
+  },
+  backContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  backtext: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
+    paddingBottom: 6,
+    color: '#5e5e5e',
+  },
+  spacer: {
+    marginTop: 42,
   },
 });
 
