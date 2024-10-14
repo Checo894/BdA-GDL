@@ -39,7 +39,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUserCart(updatedCartItems);
     };
 
-    // Remove a cart item and update Firestore
     const removeFromCart = (cartItemId: string) => {
         const updatedCartItems = cartItems.filter(item => item.cartItemId !== cartItemId);
         setCartItems(updatedCartItems);

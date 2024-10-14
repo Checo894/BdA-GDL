@@ -36,7 +36,7 @@ export default function Home({ navigation }: any) {
         setUserData(user);
         setRewards(rewards);
       } catch (error) {
-        console.error(error);
+        console.error('From Home', error);
       } finally {
         setLoading(false);
       }

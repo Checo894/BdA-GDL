@@ -1,6 +1,3 @@
-// TODO: Check if amount of products in cart is not greater than the stock quantity of the product
-//  -This may be better to implement in the ProductCard screen
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, ActivityIndicator, Animated, Dimensions, Easing } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
