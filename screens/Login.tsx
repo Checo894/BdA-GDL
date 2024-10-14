@@ -44,7 +44,7 @@ export default function Login() {
     if (loading) {
       console.log('Loading...');
     } else {
-      navigation.navigate('Home');
+      navigation.navigate('Register');
     }
   };
 

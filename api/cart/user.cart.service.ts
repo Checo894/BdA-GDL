@@ -56,6 +56,11 @@ export const getUserCart = async (): Promise<CartItem[]> => {
             return [];
         }
     } catch (error) {
+        // @ts-ignore
+        if (error.message === "No user logged in.") {
+            return [];
+        }
+
         console.error("Error loading cart:", error);
         return [];
     }

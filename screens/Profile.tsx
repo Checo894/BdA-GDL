@@ -1,8 +1,18 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { signOutUser } from '../api/user/user.logout.service';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function ProfileScreen({ navigation }: any) {
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+      navigation.navigate('Login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.spacer}>
@@ -65,7 +75,7 @@ export default function ProfileScreen({ navigation }: any) {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.lightLogoutButton} onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity style={styles.lightLogoutButton} onPress={() => handleSignOut()}>
           <Text style={styles.lightLogoutText}>Cerrar sesión</Text>
         </TouchableOpacity>
       </View>

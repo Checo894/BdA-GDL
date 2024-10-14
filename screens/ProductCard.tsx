@@ -7,7 +7,7 @@ import { getUserPoints } from "../api/user/user.points.service";
 
 export default function ProductCard({ route, navigation }: any) {
   const { item } = route.params;
-  const { addToCart } = useCart();
+  const { addToCart, cartItems } = useCart();
 
   const isProduct = item && typeof item === 'object' && 'price' in item;
 
@@ -37,6 +37,19 @@ export default function ProductCard({ route, navigation }: any) {
       points_awarded: item.points_awarded,
       ...(isProduct ? { price: item.price } : { points_cost: item.points_cost }),
     };
+
+    if (isProduct) {
+      const currentCount = cartItems.filter(cartItem => cartItem.id === item.id).length;
+      if (currentCount + 1 > item.stock_quantity) {
+        Alert.alert(
+            'Stock insuficiente',
+            'No puedes añadir más unidades de este producto porque se excede el stock disponible.',
+            [{ text: 'OK' }]
+        );
+        return;
+      }
+    }
+
     if (!isProduct) {
       if (userPoints >= item.points_cost) {
         console.log('redeemed a reward');
