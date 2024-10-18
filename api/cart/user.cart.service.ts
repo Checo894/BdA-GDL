@@ -65,3 +65,20 @@ export const getUserCart = async (): Promise<CartItem[]> => {
         return [];
     }
 };
+
+export const clearUserCart = async () => {
+    try {
+        const userUuid = await getUserUuid();
+        // @ts-ignore
+        const cartRef = doc(db, "carts", userUuid);
+        await setDoc(cartRef, { cartItems: [] });
+        console.log("Cart cleared successfully!");
+    } catch (error) {
+        console.error("Error clearing cart:", error);
+    }
+}
+
+
+
+
+

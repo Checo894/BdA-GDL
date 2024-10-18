@@ -17,7 +17,7 @@ import { auth } from "../firebase.service";
 // @ts-ignore
 import { db } from "../firebase.service";
 
-const getUserUuid = async (): Promise<FirebaseUser> => {
+export const getUserUuid = async (): Promise<FirebaseUser> => {
     return new Promise<FirebaseUser>((resolve, reject) => {
         try {
             // @ts-ignore

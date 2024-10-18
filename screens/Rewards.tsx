@@ -16,6 +16,7 @@ export default function RewardsScreen({ navigation }: any) {
       try {
         const points = await getUserPoints();
         const rewards = await getRewards();
+  
         setRewards(rewards);
         setUserPoints(points);
       } catch (error) {
@@ -24,6 +25,7 @@ export default function RewardsScreen({ navigation }: any) {
         setLoading(false);
       }
     };
+  
     fetchData();
   }, []);
 

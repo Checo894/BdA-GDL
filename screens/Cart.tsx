@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, ActivityIndicator, Animated, Dimensions, Easing } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { CartItem, useCart } from '../context/CartContex';
+import { CartItem, useCart } from '../context/CartContex'; // Asegúrate de que este context esté bien implementado
+import { clearUserCart, setUserCart } from '../api/cart/user.cart.service'; // Importamos la función para limpiar el carrito en Firebase
+import { getUserPoints, updateUserPoints } from '../api/user/user.points.service'; // Para manejar la acumulación de puntos
 
 const generateUniqueId = () => `${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
 export default function CartScreen({ navigation }: any) {
-  const { cartItems, removeFromCart } = useCart();
-
+  const { cartItems, removeFromCart, setCartItems } = useCart(); // Asegurarse de tener setCartItems disponible en el contexto
   const [itemsWithIds, setItemsWithIds] = useState<CartItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true); // Para indicar si está cargando
+  const [isClearing, setIsClearing] = useState<boolean>(false); // Estado para cuando se esté limpiando el carrito
+  const [userPoints, setUserPoints] = useState<number>(0); // Puntos del usuario
   const [balloons, setBalloons] = useState<Animated.Value[]>([]);
 
   useEffect(() => {
@@ -27,6 +30,18 @@ export default function CartScreen({ navigation }: any) {
     assignCartItemIds();
   }, [cartItems]);
 
+  useEffect(() => {
+    const fetchUserPoints = async () => {
+      try {
+        const points = await getUserPoints();
+        setUserPoints(points);
+      } catch (error) {
+        console.error("Error al obtener puntos del usuario:", error);
+      }
+    };
+    fetchUserPoints();
+  }, []);
+
   const startBalloonAnimation = () => {
     const newBalloons = Array.from({ length: 20 }).map(() => new Animated.Value(Dimensions.get('window').height));
     setBalloons(newBalloons);
@@ -38,6 +53,26 @@ export default function CartScreen({ navigation }: any) {
         useNativeDriver: true,
       }).start();
     });
+  };
+
+  const cleanCart = async () => {
+    try {
+      setIsClearing(true); // Mostrar el indicador de carga
+      await clearUserCart(); // Limpiar el carrito en Firebase
+      setCartItems([]); // Limpiar el carrito en el estado local
+      setItemsWithIds([]); // Limpiar la vista del carrito
+
+      // Acumular puntos después de la limpieza del carrito
+      const newPoints = userPoints + pointsAwarded; // Sumamos los puntos ganados
+      await updateUserPoints(newPoints); // Actualizamos los puntos en Firebase
+      setUserPoints(newPoints); // Actualizamos los puntos en el estado local
+
+      console.log("Carrito limpiado correctamente y puntos actualizados.");
+      setIsClearing(false); // Ocultar el indicador de carga
+    } catch (error) {
+      console.error("Error al limpiar el carrito o actualizar puntos:", error);
+      setIsClearing(false); // Ocultar el indicador de carga en caso de error
+    }
   };
 
   if (loading) {
@@ -72,11 +107,11 @@ export default function CartScreen({ navigation }: any) {
         {/* Back Icon */}
         <View style={styles.backContainer}>
           <Icon
-              name="arrow-back-outline"
-              size={24}
-              onPress={() => navigation.goBack()}
-              style={styles.backIcon}
-              color="#5e5e5e"
+            name="arrow-back-outline"
+            size={24}
+            onPress={() => navigation.goBack()}
+            style={styles.backIcon}
+            color="#5e5e5e"
           />
           <Text style={styles.backtext}>Regresar</Text>
         </View>
@@ -86,7 +121,13 @@ export default function CartScreen({ navigation }: any) {
         <Text style={styles.title}>Carrito</Text>
       </View>
 
-      {cartItems.length === 0 ? (
+      {isClearing ? (
+        // Mostrar indicador de carga mientras se limpia el carrito
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#f31f35" />
+          <Text>Donando a BAMX...</Text>
+        </View>
+      ) : cartItems.length === 0 ? (
         <Text style={styles.emptyCartText}>No hay nada en el carrito</Text>
       ) : (
         <>
@@ -166,6 +207,7 @@ export default function CartScreen({ navigation }: any) {
                 style={styles.donateButton}
                 onPress={() => {
                   startBalloonAnimation();
+                  cleanCart(); // Limpiar el carrito y acumular puntos
                 }}
               >
                 <Text style={styles.donateButtonText}>{buttonText}</Text>
@@ -186,10 +228,7 @@ export default function CartScreen({ navigation }: any) {
             },
           ]}
         >
-          <Image
-            source={require('../assets/balloon.png')}
-            style={styles.balloonImage}
-          />
+          <Image source={require('../assets/balloon.png')} style={styles.balloonImage} />
         </Animated.View>
       ))}
     </View>

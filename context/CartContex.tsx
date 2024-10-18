@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { setUserCart, getUserCart } from '../api/cart/user.cart.service';
+import { setUserCart, getUserCart, clearUserCart } from '../api/cart/user.cart.service'; // Importamos la función para limpiar el carrito en Firebase
 
 export interface CartItem {
     id: string;
@@ -16,6 +16,8 @@ interface CartContextProps {
     cartItems: CartItem[];
     addToCart: (item: CartItem) => void;
     removeFromCart: (cartItemId: string) => void;
+    clearCart: () => Promise<void>; // Nueva función para limpiar el carrito
+    setCartItems: (items: CartItem[]) => void; // Exponer setCartItems si es necesario desde otros componentes
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -25,8 +27,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     useEffect(() => {
         const loadCart = async () => {
-            const loadedCartItems = await getUserCart();
-            setCartItems(loadedCartItems);
+            try {
+                const loadedCartItems = await getUserCart();
+                setCartItems(loadedCartItems);
+            } catch (error) {
+                console.error("Error loading cart:", error);
+            }
         };
 
         loadCart();
@@ -45,8 +51,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUserCart(updatedCartItems);
     };
 
+    // Nueva función para limpiar el carrito en Firebase y el estado local
+    const clearCart = async () => {
+        try {
+            await clearUserCart(); // Limpiar el carrito en Firebase
+            setCartItems([]); // Limpiar el estado local del carrito
+        } catch (error) {
+            console.error("Error clearing cart:", error);
+        }
+    };
+
     return (
-        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart }}>
+        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart, setCartItems }}>
             {children}
         </CartContext.Provider>
     );
@@ -61,3 +77,4 @@ export const useCart = () => {
 };
 
 const generateUniqueId = () => `${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+
