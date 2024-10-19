@@ -10,6 +10,8 @@ type RegisterScreenNavigationProp = NativeStackNavigationProp<RootStackParamList
 export default function Register() {
   const [userName, setUserName] = useState('');
   const [userPassword, setUserPassword] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [missingCriteria, setMissingCriteria] = useState<string[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -24,7 +26,47 @@ export default function Register() {
     return () => unsubscribe();
   }, [auth]);
 
+  const evaluatePasswordStrength = (password: string) => {
+    let strength = 0;
+    const criteria = [];
+
+    if (password.length >= 6) {
+      strength += 1;
+    } else {
+      criteria.push('6 caracteres');
+    }
+    if (/[A-Z]/.test(password)) {
+      strength += 1;
+    } else {
+      criteria.push('una letra mayúscula');
+    }
+    if (/[0-9]/.test(password)) {
+      strength += 1;
+    } else {
+      criteria.push('un número');
+    }
+    if (/[^A-Za-z0-9]/.test(password)) {
+      strength += 1;
+    } else {
+      criteria.push('un carácter especial');
+    }
+
+    setPasswordStrength(strength);
+    setMissingCriteria(criteria);
+  };
+
+  // Email validation function
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleRegister = async () => {
+    if (!isValidEmail(userName)) {
+      Alert.alert('Correo inválido', 'Por favor ingresa un correo electrónico válido.');
+      return;
+    }
+
     setLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, userName, userPassword);
@@ -48,14 +90,29 @@ export default function Register() {
                 placeholder="Correo electrónico"
                 value={userName}
                 onChangeText={setUserName}
+                keyboardType="email-address"
             />
             <TextInput
                 style={styles.input}
                 placeholder="Contraseña"
                 secureTextEntry
                 value={userPassword}
-                onChangeText={setUserPassword}
+                onChangeText={(password) => {
+                  setUserPassword(password);
+                  evaluatePasswordStrength(password);
+                }}
             />
+            <View style={styles.passwordStrengthBarContainer}>
+              <View style={[styles.passwordStrengthBar, passwordStrength > 0 && { backgroundColor: 'red', width: '25%' }]} />
+              <View style={[styles.passwordStrengthBar, passwordStrength > 1 && { backgroundColor: 'orange', width: '50%' }]} />
+              <View style={[styles.passwordStrengthBar, passwordStrength > 2 && { backgroundColor: 'yellow', width: '75%' }]} />
+              <View style={[styles.passwordStrengthBar, passwordStrength > 3 && { backgroundColor: 'green', width: '100%' }]} />
+            </View>
+            {missingCriteria.length > 0 && (
+                <Text style={styles.criteriaText}>
+                  La contraseña debe incluir: {missingCriteria.join(', ')}.
+                </Text>
+            )}
             <TouchableOpacity
                 style={styles.redButton}
                 onPress={handleRegister}
@@ -152,5 +209,22 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  passwordStrengthBarContainer: {
+    flexDirection: 'row',
+    height: 10,
+    marginBottom: 10,
+    width: '100%',
+  },
+  passwordStrengthBar: {
+    flex: 1,
+    height: '100%',
+    backgroundColor: '#EDEEEF',
+    marginHorizontal: 2,
+  },
+  criteriaText: {
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });

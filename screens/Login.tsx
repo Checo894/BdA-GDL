@@ -26,7 +26,18 @@ export default function Login() {
     return () => unsubscribe();
   }, []);
 
+  // Email validation function
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleLogin = async () => {
+    if (!isValidEmail(userName)) {
+      Alert.alert('Correo inválido', 'Por favor ingresa un correo electrónico válido.');
+      return;
+    }
+
     setLoading(true);
     try {
       // @ts-ignore - Implicit any typescript error ignore
@@ -59,6 +70,7 @@ export default function Login() {
                 placeholder="Correo electrónico"
                 value={userName}
                 onChangeText={setUserName}
+                keyboardType="email-address"
             />
             <TextInput
                 style={styles.input}
@@ -165,4 +177,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
