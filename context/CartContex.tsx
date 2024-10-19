@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { setUserCart, getUserCart, clearUserCart } from '../api/cart/user.cart.service'; // Importamos la función para limpiar el carrito en Firebase
+import { setUserCart, getUserCart, clearUserCart } from '../api/cart/user.cart.service'; 
 
 export interface CartItem {
     id: string;
@@ -16,8 +16,8 @@ interface CartContextProps {
     cartItems: CartItem[];
     addToCart: (item: CartItem) => void;
     removeFromCart: (cartItemId: string) => void;
-    clearCart: () => Promise<void>; // Nueva función para limpiar el carrito
-    setCartItems: (items: CartItem[]) => void; // Exponer setCartItems si es necesario desde otros componentes
+    clearCart: () => Promise<void>; 
+    setCartItems: (items: CartItem[]) => void;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -51,11 +51,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUserCart(updatedCartItems);
     };
 
-    // Nueva función para limpiar el carrito en Firebase y el estado local
     const clearCart = async () => {
         try {
-            await clearUserCart(); // Limpiar el carrito en Firebase
-            setCartItems([]); // Limpiar el estado local del carrito
+            await clearUserCart();
+            setCartItems([]); 
         } catch (error) {
             console.error("Error clearing cart:", error);
         }

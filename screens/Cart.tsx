@@ -57,20 +57,19 @@ export default function CartScreen({ navigation }: any) {
 
   const cleanCart = async () => {
     try {
-      setIsClearing(true); // Mostrar el indicador de carga
-      await clearUserCart(); // Limpiar el carrito en Firebase
-      setCartItems([]); // Limpiar el carrito en el estado local
-      setItemsWithIds([]); // Limpiar la vista del carrito
+      setIsClearing(true); 
+      await clearUserCart(); 
+      setCartItems([]); 
+      setItemsWithIds([]); 
 
-      // Acumular puntos después de la limpieza del carrito
-      const newPoints = userPoints + pointsAwarded; // Sumamos los puntos ganados
-      await updateUserPoints(newPoints); // Actualizamos los puntos en Firebase
-      setUserPoints(newPoints); // Actualizamos los puntos en el estado local
+      const newPoints = userPoints + pointsAwarded; 
+      await updateUserPoints(newPoints); 
+      setUserPoints(newPoints); 
       console.log("Carrito limpiado correctamente y puntos actualizados.");
-      setIsClearing(false); // Ocultar el indicador de carga
+      setIsClearing(false); 
     } catch (error) {
       console.log(error);
-      setIsClearing(false); // Ocultar el indicador de carga en caso de error
+      setIsClearing(false);
     }
   };
 
@@ -121,7 +120,6 @@ export default function CartScreen({ navigation }: any) {
       </View>
 
       {isClearing ? (
-        // Mostrar indicador de carga mientras se limpia el carrito
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#f31f35" />
           <Text>Donando a BAMX...</Text>

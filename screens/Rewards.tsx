@@ -14,11 +14,8 @@ export default function RewardsScreen({ navigation }: any) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Obtiene los puntos del usuario desde Firebase
         const points = await getUserPoints();
         setUserPoints(points);
-
-        // Obtiene las recompensas desde Firebase
         const rewardsData = await getRewards();
         setRewards(rewardsData);
       } catch (error) {
@@ -32,12 +29,11 @@ export default function RewardsScreen({ navigation }: any) {
   }, []);
 
   const handleRedeemReward = async (reward: Rewards) => {
-    // Verifica si userPoints no es null antes de proceder
     if (userPoints !== null && userPoints >= reward.points_cost) {
       try {
         const newPoints = userPoints - reward.points_cost;
-        await updateUserPoints(newPoints); // Actualiza los puntos en Firebase
-        setUserPoints(newPoints); // Actualiza el estado local
+        await updateUserPoints(newPoints); 
+        setUserPoints(newPoints);
 
         Alert.alert(
           "¡Felicidades!",
