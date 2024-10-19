@@ -18,10 +18,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "compileSdkVersion": 31,
+      "targetSdkVersion": 31,
+      "minSdkVersion": 21
     },
     "web": {
       "favicon": "./assets/favicon.png"
     }
   }
 }
+
+
+
