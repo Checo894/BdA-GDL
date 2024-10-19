@@ -1,135 +1,153 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image, ActivityIndicator } from 'react-native';
-import { getUserPoints } from "../api/user/user.points.service";
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image, ActivityIndicator, Alert } from 'react-native';
+import { getUserPoints, updateUserPoints } from "../api/user/user.points.service";
 import { getRewards } from "../api/rewards/rewards.service";
 import { Rewards } from "../model/RewardsModel";
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function RewardsScreen({ navigation }: any) {
   const [selectedTab, setSelectedTab] = useState('Recompensas');
-  const [userPoints, setUserPoints] = useState<number>(0);
+  const [userPoints, setUserPoints] = useState<number | null>(null);
   const [rewards, setRewards] = useState<Rewards[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Obtiene los puntos del usuario desde Firebase
         const points = await getUserPoints();
-        const rewards = await getRewards();
-  
-        setRewards(rewards);
         setUserPoints(points);
+
+        // Obtiene las recompensas desde Firebase
+        const rewardsData = await getRewards();
+        setRewards(rewardsData);
       } catch (error) {
-        console.error(error);
+        console.error("Error al obtener datos:", error);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, []);
 
+  const handleRedeemReward = async (reward: Rewards) => {
+    // Verifica si userPoints no es null antes de proceder
+    if (userPoints !== null && userPoints >= reward.points_cost) {
+      try {
+        const newPoints = userPoints - reward.points_cost;
+        await updateUserPoints(newPoints); // Actualiza los puntos en Firebase
+        setUserPoints(newPoints); // Actualiza el estado local
+
+        Alert.alert(
+          "¡Felicidades!",
+          `Has canjeado la recompensa: ${reward.name}`
+        );
+      } catch (error) {
+        Alert.alert("Error", "Hubo un problema al canjear la recompensa. Inténtalo de nuevo.");
+        console.error("Error al canjear la recompensa:", error);
+      }
+    } else {
+      Alert.alert(
+        "Puntos insuficientes",
+        "No tienes suficientes puntos para canjear esta recompensa."
+      );
+    }
+  };
+
   return (
-      <View style={styles.container}>
-        {/* Back Icon */}
-        <View style={styles.backContainer}>
-          <Icon
-              name="arrow-back-outline"
-              size={24}
-              onPress={() => navigation.goBack()}
-              style={styles.backIcon}
-              color="#5e5e5e"
-          />
-          <Text style={styles.backtext}>Regresar</Text>
-        </View>
-
-        <Text style={styles.title}>BAMX</Text>
-        <Text style={styles.subtitle}>Recompensas</Text>
-
-        <View style={styles.progressBarContainer}>
-          <View style={styles.progressBar}>
-            <View style={[styles.progress, { width: `${Math.min(userPoints, 100)}%` }]} />
-          </View>
-        </View>
-        <Text style={styles.pointsText}>Puntos acumulados: {userPoints} Puntos</Text>
-
-        <View style={styles.tabContainer}>
-          <TouchableOpacity
-              style={[styles.tab, selectedTab === 'Detalles' && styles.tabSelected]}
-              onPress={() => setSelectedTab('Detalles')}
-          >
-            <Text style={selectedTab === 'Detalles' ? styles.tabTextSelected : styles.tabText}>Detalles</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-              style={[styles.tab, selectedTab === 'Recompensas' && styles.tabSelected]}
-              onPress={() => setSelectedTab('Recompensas')}
-          >
-            <Text style={selectedTab === 'Recompensas' ? styles.tabTextSelected : styles.tabText}>Recompensas</Text>
-          </TouchableOpacity>
-        </View>
-
-        {loading ? (
-            <ActivityIndicator size="large" color="#0000ff" style={styles.loadingIndicator} />
-        ) : (
-            selectedTab === 'Recompensas' ? (
-                <FlatList
-                    data={rewards}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            style={styles.rewardItem}
-                            onPress={() => navigation.navigate('ProductCard', { item })}
-                        >
-                          <Image source={{ uri: item.image_url }} style={styles.rewardImage} />
-                          <View style={styles.rewardTextContainer}>
-                            <Text style={styles.rewardTitle}>{item.name}</Text>
-                            <Text style={styles.rewardDescription}>{item.description}</Text>
-                            <Text style={styles.rewardPoints}>Costo: {item.points_cost} puntos</Text>
-                          </View>
-                        </TouchableOpacity>
-                    )}
-                    contentContainerStyle={styles.listContainer}
-                    style={styles.flatList}
-                />
-            ) : (
-                <Text style={styles.detailsText}>
-                  <Text style={styles.boldText}>¡Bienvenido al emocionante mundo de las recompensas BAMX!</Text>
-                  {"\n\n"}
-                  <Text style={styles.sectionTitle}>¿Cómo funciona?</Text>
-                  {"\n"}- Cada vez que <Text style={styles.boldText}>donas</Text>, estás ayudando a una <Text style={styles.boldText}>familia</Text> necesitada.
-                  {"\n"}- Además, acumulas <Text style={styles.boldText}>puntos</Text> que puedes canjear por <Text style={styles.boldText}>beneficios exclusivos</Text>.
-                  {"\n\n"}
-                  <Text style={styles.sectionTitle}>¿Qué puedes obtener?</Text>
-                  {"\n"}- Cupones 2x1
-                  {"\n"}- Descuentos especiales
-                  {"\n"}- Productos únicos
-                  {"\n\n"}
-                  <Text style={styles.boldText}>¡Ayuda y gana al mismo tiempo!</Text>
-                  {"\n"}Con BAMX, no solo contribuyes a una buena causa, sino que también recibes <Text style={styles.boldText}>recompensas</Text> por tu generosidad.
-                  {"\n"}¡Juntos podemos hacer la diferencia!
-                </Text>
-            )
-        )}
-
-        <View style={styles.tabBar}>
-          <TouchableOpacity onPress={() => navigation.navigate('Donaciones')}>
-            <Icon name="grid-outline" size={30} />
-          </TouchableOpacity>
-          <View style={styles.rewardsIconContainer}>
-            <Icon name="star-outline" size={30} color="#fff" />
-          </View>
-          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-            <Icon name="home-outline" size={30} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
-            <Icon name="cart-outline" size={30} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-            <Icon name="person-outline" size={30} />
-          </TouchableOpacity>
-        </View>
+    <View style={styles.container}>
+      {/* Back Icon */}
+      <View style={styles.backContainer}>
+        <Icon
+          name="arrow-back-outline"
+          size={24}
+          onPress={() => navigation.goBack()}
+          style={styles.backIcon}
+          color="#5e5e5e"
+        />
+        <Text style={styles.backtext}>Regresar</Text>
       </View>
+
+      <Text style={styles.title}>BAMX</Text>
+      <Text style={styles.subtitle}>Recompensas</Text>
+
+      {userPoints !== null && (
+        <>
+          <View style={styles.progressBarContainer}>
+            <View style={styles.progressBar}>
+              <View style={[styles.progress, { width: `${Math.min(userPoints, 100)}%` }]} />
+            </View>
+          </View>
+          <Text style={styles.pointsText}>Puntos acumulados: {userPoints} Puntos</Text>
+        </>
+      )}
+
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={[styles.tab, selectedTab === 'Detalles' && styles.tabSelected]}
+          onPress={() => setSelectedTab('Detalles')}
+        >
+          <Text style={selectedTab === 'Detalles' ? styles.tabTextSelected : styles.tabText}>Detalles</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.tab, selectedTab === 'Recompensas' && styles.tabSelected]}
+          onPress={() => setSelectedTab('Recompensas')}
+        >
+          <Text style={selectedTab === 'Recompensas' ? styles.tabTextSelected : styles.tabText}>Recompensas</Text>
+        </TouchableOpacity>
+      </View>
+
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" style={styles.loadingIndicator} />
+      ) : (
+        selectedTab === 'Recompensas' ? (
+          <FlatList
+            data={rewards}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.rewardItem}
+                onPress={() => handleRedeemReward(item)}
+              >
+                <Image source={{ uri: item.image_url }} style={styles.rewardImage} />
+                <View style={styles.rewardTextContainer}>
+                  <Text style={styles.rewardTitle}>{item.name}</Text>
+                  <Text style={styles.rewardDescription}>{item.description}</Text>
+                  <Text style={styles.rewardPoints}>Costo: {item.points_cost} puntos</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            contentContainerStyle={styles.listContainer}
+            style={styles.flatList}
+          />
+        ) : (
+          <Text style={styles.detailsText}>
+            {/* ...texto de detalles... */}
+          </Text>
+        )
+      )}
+
+      {/* Tab Bar */}
+      <View style={styles.tabBar}>
+        <TouchableOpacity onPress={() => navigation.navigate('Donaciones')}>
+          <Icon name="grid-outline" size={30} />
+        </TouchableOpacity>
+        <View style={styles.rewardsIconContainer}>
+          <Icon name="star-outline" size={30} color="#fff" />
+        </View>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Icon name="home-outline" size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+          <Icon name="cart-outline" size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <Icon name="person-outline" size={30} />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 

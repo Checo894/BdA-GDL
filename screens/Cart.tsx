@@ -66,11 +66,10 @@ export default function CartScreen({ navigation }: any) {
       const newPoints = userPoints + pointsAwarded; // Sumamos los puntos ganados
       await updateUserPoints(newPoints); // Actualizamos los puntos en Firebase
       setUserPoints(newPoints); // Actualizamos los puntos en el estado local
-
       console.log("Carrito limpiado correctamente y puntos actualizados.");
       setIsClearing(false); // Ocultar el indicador de carga
     } catch (error) {
-      console.error("Error al limpiar el carrito o actualizar puntos:", error);
+      console.log(error);
       setIsClearing(false); // Ocultar el indicador de carga en caso de error
     }
   };
@@ -207,7 +206,7 @@ export default function CartScreen({ navigation }: any) {
                 style={styles.donateButton}
                 onPress={() => {
                   startBalloonAnimation();
-                  cleanCart(); // Limpiar el carrito y acumular puntos
+                  cleanCart();
                 }}
               >
                 <Text style={styles.donateButtonText}>{buttonText}</Text>
